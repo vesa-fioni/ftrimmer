@@ -261,8 +261,12 @@
         puumasto-ohjeiden rinnalla. Lisätty uusi "Keulaharuksen taipuma" -rivi Mastoon: North Sails
         ja HSK-trimmiklinikka suosittavat 8 cm, Heikkilä Sailmaker 4–6 cm — molemmat näkyvät.
         Mastonjalka-rivi suodattuu nyt purjemerkin mukaan samalla logiikalla kuin muutkin aiheet.
+  v1.7  Nimetty "Keulaharuksen taipuma" -rivi uudelleen "Sivuvantit (keulaharuksen taipuma)" ja
+        muokattu tekstit painottamaan ensin vanttien kireyttä (teko) ja vasta sitten
+        keulaharuksen taipumaa (tulos) — vastaa suoraan kysymykseen sivuvanttien kireydestä
+        eri tuulissa.
 */
-const VERSION = 'v1.6';
+const VERSION = 'v1.7';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -604,22 +608,22 @@ const coreData = {
   // pituudella. Lähteet antavat eri lukemat: North Sails ja HSK 8 cm, Heikkilä 4–6 cm.
   forestay_sag: {
     light: [
-      {appliesTo:'northsails', src:'North Sails', text:'Noin 8 cm taipuma keulaharuksessa.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Noin 4–6 cm taipuma keulaharuksessa. Säädä taipumaa vanttien kireydellä, ei keulaharuksen pituudella.'},
-      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite on, että kryssillä purjehtiessa taipuma on 8 cm.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Vantit riittävän löysällä — oikea kireys näkyy siitä, että keulaharuksen taipuma on noin 8 cm.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Vantit sen verran löysällä, että keulaharuksen taipuma on noin 4–6 cm. Säädä taipumaa vanttien kireydellä, ei keulaharuksen pituudella.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Vanttien kireys on oikea, kun kryssillä purjehtiessa keulaharuksen taipuma on 8 cm.'}
     ],
     medium: [
-      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja 1½ kierrosta kevyestä tuulesta — taipuma pienenee.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Sama noin 4–6 cm taipuma — säädetään edelleen vanttien kireydellä.'},
-      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja 1½ kierrosta kevyestä tuulesta — keulaharuksen taipuma pienenee.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Vantit hieman kireämmällä — taipuma pysyy noin 4–6 cm:ssä.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Vantit kireämmällä; tavoite pysyy 8 cm:ssä.'}
     ],
     strong: [
-      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja vielä 1½ kierrosta lisää — taipuma pienenee edelleen.'},
-      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja vielä 1½ kierrosta lisää — keulaharuksen taipuma pienenee edelleen.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Vantit vielä kireämmällä; tavoite pysyy 8 cm:ssä.'}
     ],
     extreme: [
-      {appliesTo:'northsails', src:'North Sails', text:'Sama kuin kovassa tuulessa — vantit pidetään kireinä.'},
-      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Vantit pidetään yhtä kireinä kuin kovassa tuulessa.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Vantit kireinä; tavoite pysyy 8 cm:ssä.'}
     ]
   }
 };
@@ -770,7 +774,7 @@ function renderRecommendation(){
 
   html += groupHeader('Masto');
   html += mastRow('Mastonjalka / viulut');
-  html += row('Keulaharuksen taipuma', 'forestay_sag');
+  html += row('Sivuvantit (keulaharuksen taipuma)', 'forestay_sag');
   html += row('Takaharus (hekki)', 'backstay');
 
   html += groupHeader('Isopurje');
