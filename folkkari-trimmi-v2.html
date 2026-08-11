@@ -229,11 +229,28 @@ function setStatus(msg, isErr){
 
 // ---------- Havaintojen hakeminen ----------
 
+// Yritetään ensin suoraa hakua. Jos selain estää sen CORS-syistä, yritetään
+// vielä julkisen proxyn kautta, joka lisää tarvittavat CORS-otsikot.
+async function fetchXml(url){
+  try{
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.text();
+  } catch(directErr){
+    try{
+      const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+      const res2 = await fetch(proxied);
+      if(!res2.ok) throw new Error('proxy HTTP ' + res2.status);
+      return await res2.text();
+    } catch(proxyErr){
+      throw new Error('suora haku: ' + directErr.message + ' — proxy: ' + proxyErr.message);
+    }
+  }
+}
+
 async function fetchWind(){
   try{
-    const res = await fetch(WIND_URL);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
+    const text = await fetchXml(WIND_URL);
     const xml = new DOMParser().parseFromString(text, 'text/xml');
     const elements = xml.getElementsByTagName('BsWfs:BsWfsElement');
     if(!elements.length) throw new Error('Ei tuulihavaintoja');
@@ -263,19 +280,17 @@ async function fetchWind(){
     els.obsTimeWind.textContent = t ? ('havaittu ' + new Date(t).toLocaleString('fi-FI',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})) : '';
 
     state.windSpeed = ws;
-    return true;
+    return {ok:true};
   } catch(err){
     console.error('Tuulihaku epäonnistui:', err);
     els.manualWindRow.classList.add('show');
-    return false;
+    return {ok:false, source:'tuuli', message: err.message};
   }
 }
 
 async function fetchWave(){
   try{
-    const res = await fetch(WAVE_URL);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
+    const text = await fetchXml(WAVE_URL);
     const xml = new DOMParser().parseFromString(text, 'text/xml');
 
     const OM_NS = "http://www.opengis.net/om/2.0";
@@ -321,23 +336,23 @@ async function fetchWave(){
     els.obsTimeWave.textContent = t ? ('havaittu ' + new Date(t).toLocaleString('fi-FI',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})) : '';
 
     state.waveHeight = hs;
-    return true;
+    return {ok:true};
   } catch(err){
     console.error('Aallokkohaku epäonnistui:', err);
     els.manualWaveRow.classList.add('show');
-    return false;
+    return {ok:false, source:'aallokko', message: err.message};
   }
 }
 
 async function fetchAll(){
   setStatus('Haetaan tuoreinta havaintoa Harmajasta ja Suomenlinnan poijusta…');
-  const [windOk, waveOk] = await Promise.all([fetchWind(), fetchWave()]);
-  if(windOk && waveOk){
+  const [windRes, waveRes] = await Promise.all([fetchWind(), fetchWave()]);
+  if(windRes.ok && waveRes.ok){
     setStatus('Haettu onnistuneesti Ilmatieteen laitoksen avoimesta datasta.');
-  } else if(windOk || waveOk){
-    setStatus('Osa hausta onnistui — täytä puuttuvat arvot itse alla.', true);
   } else {
-    setStatus('Hakua ei saatu läpi. Syötä tuuli ja aallokko itse alla.', true);
+    const failed = [windRes, waveRes].filter(r => !r.ok);
+    const detail = failed.map(r => r.source + ': ' + r.message).join(' · ');
+    setStatus('Osa hausta epäonnistui (' + detail + '). Syötä puuttuvat arvot itse alla.', true);
   }
   renderRecommendation();
 }
