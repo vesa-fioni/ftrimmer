@@ -248,8 +248,10 @@
         pätee samaan aiheeseen, kaikki näytetään omilla lähdemerkinnöillään samassa solussa.
   v1.1  Korjattu termi: "perähuoli" -> "takaharus" (hekki).
   v1.2  Korjattu termit: "leeseen"/"leeteen" -> "leehen", ja "kokpitin" -> "sitloodan".
+  v1.3  Lisätty selitys suluissa aina kun käytetään termiä "leehen" (myötätuulen puolelle) tai
+        "luuvartissa" (tuulen puolelle), selkeyden vuoksi.
 */
-const VERSION = 'v1.2';
+const VERSION = 'v1.3';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -480,13 +482,13 @@ const coreData = {
       {appliesTo:'elvstrom', src:'Elvström', text:'Puomi jopa 25 cm keskilinjasta, hieman kireämmällä — ei niin paljon, että kolme ylintä lattaa kiertyvät puomin ohi.'}
     ],
     strong: [
-      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut leehen — vähentää kallistusta ja peräsimen painetta.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki päästetään leehen, skuutit pidetään kireällä.'},
-      {appliesTo:'elvstrom', src:'Elvström', text:'Puomi enemmän leehen, korkeimmillaan noin 20 cm sitloodan reunasta.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut leehen (myötätuulen puolelle) — vähentää kallistusta ja peräsimen painetta.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki päästetään leehen (myötätuulen puolelle), skuutit pidetään kireällä.'},
+      {appliesTo:'elvstrom', src:'Elvström', text:'Puomi enemmän leehen (myötätuulen puolelle), korkeimmillaan noin 20 cm sitloodan reunasta.'}
     ],
     extreme: [
-      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut selvästi leehen. Jos kallistus jatkuu, päästä levankia lisää ennen skuutin löysäämistä.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki selvästi leehen, sama periaate kuin kovassa tuulessa.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut selvästi leehen (myötätuulen puolelle). Jos kallistus jatkuu, päästä levankia lisää ennen skuutin löysäämistä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki selvästi leehen (myötätuulen puolelle), sama periaate kuin kovassa tuulessa.'}
     ]
   },
   cunningham: {
