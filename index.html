@@ -200,8 +200,11 @@
   v0.4  Korjattu tuulen parametrien tunnistus: nimet luetaan nyt kirjainkoosta riippumatta
         (esim. "WindSpeedMS" ja "windspeedms" tulkitaan samaksi), ja jos tuulinopeutta ei
         löydy, virheviestiin tulostuu lista oikeasti saaduista parametrinimistä.
+  v0.5  Korjattu termi: isopurjeen alareunan säätököysi on puomiliikki (outhaul), ei "pohjaköysi".
+  v0.6  Lisätty levanki (traveller) trimmisuositukseen — puuttui aiemmin kokonaan, vaikka
+        se on isopurjeen tärkeimpiä säätöjä North Sailsin ohjeen mukaan.
 */
-const VERSION = 'v0.4';
+const VERSION = 'v0.6';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -397,24 +400,28 @@ const bandLabel = {
 
 const core = {
   light: {
-    isopurjeen_pohja: 'Pohjaköysi (outhaul) auki, purjeen alareuna noin 3 cm merkistä irti.',
+    isopurjeen_pohja: 'Puomiliikki (outhaul) auki, purjeen alareuna noin 3 cm merkistä irti.',
     luffi: 'Cunninghamia ei vielä käytetä. Anna ryppyjen näkyä etureunassa.',
-    fokka: 'Fokan skuutti hieman löysemmällä, ylälieve saa liehua 2–3 astetta.'
+    fokka: 'Fokan skuutti hieman löysemmällä, ylälieve saa liehua 2–3 astetta.',
+    levanki: 'Levankivaunut 15–20 cm luuvartin puolelle (tuulen puolelle) — pitää puomin ylhäällä ja purjeen tehokkaana.'
   },
   medium: {
-    isopurjeen_pohja: 'Pohjaköysi noin 1,5 cm merkistä irti.',
+    isopurjeen_pohja: 'Puomiliikki noin 1,5 cm merkistä irti.',
     luffi: 'Cunninghamia kiristetään sen verran, että etureunan rypyt häviävät — ei enempää.',
-    fokka: 'Skuuttipiste perusasennossa. Suojan puolen virtauslanka kiinni, tuulen puolen hieman höllä.'
+    fokka: 'Skuuttipiste perusasennossa. Suojan puolen virtauslanka kiinni, tuulen puolen hieman höllä.',
+    levanki: 'Levankivaunut veneen keskilinjalle. Säädä skuutin parina, kun hakemet isopurjeen perustrimmiä.'
   },
   strong: {
-    isopurjeen_pohja: 'Pohjaköysi kokonaan merkkiin — purje litteäksi alaosasta.',
+    isopurjeen_pohja: 'Puomiliikki kokonaan merkkiin — purje litteäksi alaosasta.',
     luffi: 'Cunningham kiristetään voimakkaasti: purjeen pussi siirtyy eteenpäin ja takareuna avautuu.',
-    fokka: 'Skuuttipistettä siirretään taaemmas 1–2 reikäväliä, yläosa päästää tuulta läpi.'
+    fokka: 'Skuuttipistettä siirretään taaemmas 1–2 reikäväliä, yläosa päästää tuulta läpi.',
+    levanki: 'Päästä levankivaunut leehen (myötätuulen puolelle) vähentämään kallistusta ja peräsimen painetta.'
   },
   extreme: {
-    isopurjeen_pohja: 'Pohjaköysi täysin kiinni merkissä.',
+    isopurjeen_pohja: 'Puomiliikki täysin kiinni merkissä.',
     luffi: 'Cunningham täysin kireällä koko ajan.',
-    fokka: 'Skuuttipiste kauimpana takana. Harkitse pienempää fokkaa, jos vene ei pysy tasapainossa.'
+    fokka: 'Skuuttipiste kauimpana takana. Harkitse pienempää fokkaa, jos vene ei pysy tasapainossa.',
+    levanki: 'Levankivaunut selvästi leeseen. Jos vene kallistuu silti liikaa, päästä levankia lisää ennen kuin löysäät skuuttia.'
   }
 };
 
@@ -491,7 +498,8 @@ function renderRecommendation(){
   html += '<h2 class="rec-title">Näin trimmaat tässä tuulessa</h2>';
   html += '<table class="trim">';
   html += '<tr><td class="k">Mastonjalka</td><td>' + mastInfo.foot + '</td></tr>';
-  html += '<tr><td class="k">Isopurjeen pohja</td><td>' + coreInfo.isopurjeen_pohja + '</td></tr>';
+  html += '<tr><td class="k">Puomiliikki</td><td>' + coreInfo.isopurjeen_pohja + '</td></tr>';
+  html += '<tr><td class="k">Levanki</td><td>' + coreInfo.levanki + '</td></tr>';
   html += '<tr><td class="k">Cunningham</td><td>' + coreInfo.luffi + '</td></tr>';
   html += '<tr><td class="k">Fokka</td><td>' + coreInfo.fokka + '</td></tr>';
   html += '<tr><td class="k">Fokan skuuttipiste</td><td>' + sailInfo.jibLead + '</td></tr>';
