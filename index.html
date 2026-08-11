@@ -240,7 +240,7 @@
         siirretty omaan laatikkoonsa "yleistä purjehdustietoa" -merkinnällä, ei enää sekoitettuna
         folkkarin ohjeiden sekaan. Käytiin läpi kaikki neljä trimmiopasta ja lisättiin puuttuneet
         säädöt: takaharus/hekki (North Sails/Elvström/HSK), kicki/puomivantti (North Sails) ja
-        fokan nostoliinan kireys (North Sails). Miehistön sijoitusohje täydennetty HSK-klinikan
+        fokan fallin kireys (North Sails). Miehistön sijoitusohje täydennetty HSK-klinikan
         omalla neuvolla (paino levangin etupuolelle kryssillä).
   v1.0  Neuvot suodatetaan nyt purjemerkin mukaan: North Sailsin neuvot näkyvät vain North Sailsin
         purjeille, Heikkilä Sailmakerin neuvot vain Heikkilän purjeille. Elvströmin neuvot näkyvät
@@ -250,8 +250,18 @@
   v1.2  Korjattu termit: "leeseen"/"leeteen" -> "leehen", ja "kokpitin" -> "sitloodan".
   v1.3  Lisätty selitys suluissa aina kun käytetään termiä "leehen" (myötätuulen puolelle) tai
         "luuvartissa" (tuulen puolelle), selkeyden vuoksi.
+  v1.4  Korjattu termi: "nostoliina" -> "fokan falli" (koska rivi koskee vain fokkaa).
+  v1.5  Korjattu virheellinen lähdemerkintä: "G-piste" on HSK-trimmiklinikan (Kæstel & Lindberg)
+        nimitys purjeen pussin syvimmälle kohdalle, ei North Sailsin oma termi. North Sailsin
+        rivi selittää nyt vain mitä 47 %/53 % tarkoittaa käytännössä, ja G-piste-nimitys näkyy
+        omalla oikealla lähteellään.
+  v1.6  Lisätty North Sailsin oma puumasto-ohje (Nordisk Folkebåd Tuning-guide til træmast) omana
+        lähteenään — näkyy vain kun purjemerkki on North Sails ja masto on puu, Elvströmin/HSK:n
+        puumasto-ohjeiden rinnalla. Lisätty uusi "Keulaharuksen taipuma" -rivi Mastoon: North Sails
+        ja HSK-trimmiklinikka suosittavat 8 cm, Heikkilä Sailmaker 4–6 cm — molemmat näkyvät.
+        Mastonjalka-rivi suodattuu nyt purjemerkin mukaan samalla logiikalla kuin muutkin aiheet.
 */
-const VERSION = 'v1.3';
+const VERSION = 'v1.6';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -588,28 +598,70 @@ const coreData = {
     medium:  [{appliesTo:'elvstrom', src:'Elvström', text:'Purjeen pussi noin kolmanneksessa etureunasta.'}],
     strong:  [{appliesTo:'elvstrom', src:'Elvström', text:'Pussi kolmanneksessa etureunasta tai hieman etäämpänä eteenpäin.'}],
     extreme: [{appliesTo:'elvstrom', src:'Elvström', text:'Sama kuin kovassa tuulessa — pussi pidetään edessä.'}]
+  },
+  // Keulaharuksen taipuma (forestay sag) — säädetään vanttien kireydellä, ei keulaharuksen
+  // pituudella. Lähteet antavat eri lukemat: North Sails ja HSK 8 cm, Heikkilä 4–6 cm.
+  forestay_sag: {
+    light: [
+      {appliesTo:'northsails', src:'North Sails', text:'Noin 8 cm taipuma keulaharuksessa.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Noin 4–6 cm taipuma keulaharuksessa. Säädä taipumaa vanttien kireydellä, ei keulaharuksen pituudella.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite on, että kryssillä purjehtiessa taipuma on 8 cm.'}
+    ],
+    medium: [
+      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja 1½ kierrosta kevyestä tuulesta — taipuma pienenee.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Sama noin 4–6 cm taipuma — säädetään edelleen vanttien kireydellä.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+    ],
+    strong: [
+      {appliesTo:'northsails', src:'North Sails', text:'Kiristä vanttien ruuveja vielä 1½ kierrosta lisää — taipuma pienenee edelleen.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+    ],
+    extreme: [
+      {appliesTo:'northsails', src:'North Sails', text:'Sama kuin kovassa tuulessa — vantit pidetään kireinä.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka', text:'Tavoite pysyy 8 cm:ssä.'}
+    ]
   }
 };
 
-// Suodattaa yhden aiheen (esim. "outhaul") kohdat nykyisen tuuliluokan ja purjemerkin mukaan.
+// Suodattaa listan kohteita nykyisen purjemerkin mukaan.
 // Näytetään: valitun purjemerkin omat kohdat + Elvström (sopii molemmille) + yleiset (HSK/muu).
+function filterEntries(list, brand){
+  return (list || []).filter(e => e.appliesTo === brand || e.appliesTo === 'elvstrom' || e.appliesTo === 'general');
+}
+
+// Suodattaa yhden aiheen (esim. "outhaul") kohdat nykyisen tuuliluokan ja purjemerkin mukaan.
 function pickEntries(topic, band, brand){
   const list = (coreData[topic] && coreData[topic][band]) || [];
-  return list.filter(e => e.appliesTo === brand || e.appliesTo === 'elvstrom' || e.appliesTo === 'general');
+  return filterEntries(list, brand);
 }
 
 const mastByMaterial = {
   alu: {
-    light:  {foot: {text:'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan.', src:'North Sails'}},
-    medium: {foot: {text:'Mastonjalka painettuna 16 mm taaksepäin.', src:'North Sails'}},
-    strong: {foot: {text:'Mastonjalka painettuna 10 mm taaksepäin. Kiristä viulut, jos kaari ei pysy tasaisena ylhäältä alas.', src:'North Sails'}},
-    extreme:{foot: {text:'Sama kuin kovassa tuulessa. Jos masto tärähtelee keskeltä, kiristä viuluja lisää.', src:'North Sails'}}
+    light:  [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan.'}],
+    medium: [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 16 mm taaksepäin.'}],
+    strong: [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 10 mm taaksepäin. Kiristä viulut, jos kaari ei pysy tasaisena ylhäältä alas.'}],
+    extreme:[{appliesTo:'northsails', src:'North Sails', text:'Sama kuin kovassa tuulessa. Jos masto tärähtelee keskeltä, kiristä viuluja lisää.'}]
   },
+  // North Sails julkaisee alumiinimasto-ohjeen lisäksi oman, erillisen ohjeen puumastolle
+  // (Nordisk Folkebåd Tuning-guide til træmast, northsails.com). Näytetään vain kun
+  // purjemerkki on North Sails — Elvströmin ja HSK:n ohjeet näytetään aina.
   wood: {
-    light:  {foot: {text:'Masto keskellä mastoaukkoa, esikaarto (prebend) noin 8 cm löysillä vanteilla.', src:'Elvström / HSK-klinikka'}},
-    medium: {foot: {text:'Sama esikaarto — hae viuluilla tasainen kaari koko matkalta, ei painotusta vain alaosaan.', src:'Elvström / HSK-klinikka'}},
-    strong: {foot: {text:'Siirrä mastonjalkaa vähän taaksepäin, jos masto painuu aukon etureunaan.', src:'Elvström'}},
-    extreme:{foot: {text:'Sama kuin kovassa tuulessa. Harkitse kevyempää purjeyhdistelmää — puumasto ei kestä äärikuormaa yhtä hyvin kuin alumiini.', src:'Elvström'}}
+    light:  [
+      {appliesTo:'elvstrom', src:'Elvström / HSK-klinikka', text:'Masto keskellä mastoaukkoa, esikaarto (prebend) noin 8 cm löysillä vanteilla.'},
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Viuluvantit löysällä. Tavoitteena tasainen esikaarto koko matkalta ja keulaharuksen taipuma noin 8 cm.'}
+    ],
+    medium: [
+      {appliesTo:'elvstrom', src:'Elvström / HSK-klinikka', text:'Sama esikaarto — hae viuluilla tasainen kaari koko matkalta, ei painotusta vain alaosaan.'},
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Kiristä viulujen yhteistä ruuvia 2–3 kierrosta — tavoitteena purjeen pussi noin 47 % etureunasta ylhäällä.'}
+    ],
+    strong: [
+      {appliesTo:'elvstrom', src:'Elvström', text:'Siirrä mastonjalkaa vähän taaksepäin, jos masto painuu aukon etureunaan.'},
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Viulut kohtuullisen kireällä — tärkeintä on, että maston kaari pysyy tasaisena koko matkalta eikä painotu vain alaosaan.'}
+    ],
+    extreme: [
+      {appliesTo:'elvstrom', src:'Elvström', text:'Sama kuin kovassa tuulessa. Harkitse kevyempää purjeyhdistelmää — puumasto ei kestä äärikuormaa yhtä hyvin kuin alumiini.'},
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Tarkkaile maston kaaren tasaisuutta: liian kireä viulu latistaa purjeen alaosan liikaa, liian löysä jättää yläosan liian suoraksi.'}
+    ]
   }
 };
 
@@ -621,7 +673,7 @@ const mastMaterialNote = {
 const sailByBrand = {
   northsails: {
     jibLead:  {text:'Skuuttauspiste 58 cm keskilinjasta. Aloitusetäisyys keulaharuksen kiinnityspisteestä 2,65 m.', src:'North Sails'},
-    mainDraft:{text:'Ison purjeen yläosan syvin kohta 47 % etureunasta laskettuna (North Sailsin oma G-piste).', src:'North Sails'}
+    mainDraft:{text:'Ison purjeen yläosan syvin kohta 47 % etureunasta (53 % jättöreunasta) laskettuna — eli purjeen pussin syvin kohta on hieman etureunan puolella purjeen keskikohtaa, kun katsotaan poikkileikkausta ylhäältä.', src:'North Sails'}
   },
   heikkila: {
     jibLead:  {text:'Mitta keskilinjasta 450 mm, mitta keulaharuksen kiinnityspisteestä 2590–2610 mm.', src:'Heikkilä Sailmaker'},
@@ -675,19 +727,28 @@ function renderRecommendation(){
     return;
   }
   const isWarn = band === 'extreme';
-  const mastInfo = mastByMaterial[state.mast][band];
   const sailInfo = sailByBrand[state.sail];
   const brand = state.sail;
 
-  // Rakentaa yhden taulukkorivin. Voi sisältää useamman lähteen (esim. valitun purjemerkin
-  // oma neuvo + Elvströmin neuvo, jotka molemmat näytetään).
-  const row = (label, topic) => {
-    const entries = pickEntries(topic, band, brand);
+  // Rakentaa yhden taulukkorivin valmiiksi suodatetusta entry-listasta.
+  const rowFromEntries = (label, entries) => {
     if(!entries.length) return '';
     const cell = entries.map(e =>
       '<div class="entry">' + e.text + '<div class="src">' + e.src + '</div></div>'
     ).join('');
     return '<tr><td class="k">' + label + '</td><td>' + cell + '</td></tr>';
+  };
+
+  // Rakentaa yhden taulukkorivin aiheesta (coreData), suodatettuna nykyisen tuuliluokan ja
+  // purjemerkin mukaan. Voi sisältää useamman lähteen (esim. valitun purjemerkin oma neuvo +
+  // Elvströmin neuvo, jotka molemmat näytetään).
+  const row = (label, topic) => rowFromEntries(label, pickEntries(topic, band, brand));
+
+  // Sama mastonjalalle/mastolle, mutta data tulee mastByMaterial-taulukosta valitun
+  // mastomateriaalin (alumiini/puu) mukaan.
+  const mastRow = (label) => {
+    const list = (mastByMaterial[state.mast] && mastByMaterial[state.mast][band]) || [];
+    return rowFromEntries(label, filterEntries(list, brand));
   };
 
   const singleRow = (label, item) =>
@@ -707,7 +768,8 @@ function renderRecommendation(){
   html += '<table class="trim">';
 
   html += groupHeader('Masto');
-  html += singleRow('Mastonjalka', mastInfo.foot);
+  html += mastRow('Mastonjalka / viulut');
+  html += row('Keulaharuksen taipuma', 'forestay_sag');
   html += row('Takaharus (hekki)', 'backstay');
 
   html += groupHeader('Isopurje');
@@ -717,10 +779,13 @@ function renderRecommendation(){
   html += row('Kicki (puomivantti)', 'vang');
   html += singleRow('Muoto (' + brandName + ')', sailInfo.mainDraft);
   html += row('Muoto (aallon sijainti)', 'main_draft_elvstrom');
+  html += '<tr><td class="k"></td><td style="font-size:12.5px;color:#5b6f7d;">' +
+          'Tätä purjeen pussin syvintä kohtaa kutsutaan myös "G-pisteeksi".' +
+          '<div class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</div></td></tr>';
 
   html += groupHeader('Fokka');
   html += row('Skuutti', 'jib_sheet');
-  html += row('Nostoliina / etureuna', 'jib_halyard');
+  html += row('Fokan falli / etureuna', 'jib_halyard');
   html += singleRow('Skuuttipiste', sailInfo.jibLead);
 
   html += '</table>';
