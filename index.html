@@ -197,8 +197,11 @@
         purjemerkin valinta (North Sails / Heikkilä Sailmaker) ja muokattavat miehistöpainot.
   v0.3  Korjattu Harmajan tuulihaku: lisätty automaattinen CORS-proxy-varareitti ja
         tarkempi virheviesti, jos haku epäonnistuu.
+  v0.4  Korjattu tuulen parametrien tunnistus: nimet luetaan nyt kirjainkoosta riippumatta
+        (esim. "WindSpeedMS" ja "windspeedms" tulkitaan samaksi), ja jos tuulinopeutta ei
+        löydy, virheviestiin tulostuu lista oikeasti saaduista parametrinimistä.
 */
-const VERSION = 'v0.3';
+const VERSION = 'v0.4';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -271,18 +274,26 @@ async function fetchWind(){
       const valEl = el.getElementsByTagName('BsWfs:ParameterValue')[0];
       const timeEl = el.getElementsByTagName('BsWfs:Time')[0];
       if(!nameEl || !valEl) continue;
-      const name = nameEl.textContent.trim();
+      const name = nameEl.textContent.trim().toLowerCase();
       const value = parseFloat(valEl.textContent.trim());
       const time = timeEl ? timeEl.textContent.trim() : null;
       if(isNaN(value)) continue;
       if(!latest[name] || (time && time > latest[name].time)) latest[name] = {time, value};
     }
 
-    const ws = latest['windspeedms'] ? latest['windspeedms'].value : null;
-    const wg = latest['windgust'] ? latest['windgust'].value : null;
-    const wd = latest['winddirection'] ? latest['winddirection'].value : null;
-    const t = latest['windspeedms'] ? latest['windspeedms'].time : null;
-    if(ws == null) throw new Error('Tuulen nopeutta ei löytynyt');
+    const pick = (names) => {
+      for(const n of names){ if(latest[n]) return latest[n]; }
+      return null;
+    };
+    const wsHit = pick(['windspeedms','ws_10min','ws','windspeed']);
+    const wgHit = pick(['windgust','wg_10min','wg']);
+    const wdHit = pick(['winddirection','wd_10min','wd']);
+
+    const ws = wsHit ? wsHit.value : null;
+    const wg = wgHit ? wgHit.value : null;
+    const wd = wdHit ? wdHit.value : null;
+    const t = wsHit ? wsHit.time : null;
+    if(ws == null) throw new Error('tuulinopeutta ei löytynyt. Saadut parametrit: ' + (Object.keys(latest).join(', ') || '(ei yhtään)'));
 
     els.ws.textContent = ws.toFixed(1);
     els.wg.textContent = (wg!=null) ? wg.toFixed(1) : '–';
