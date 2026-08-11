@@ -239,15 +239,17 @@
         (North Sails / Elvström / Heikkilä Sailmaker / HSK-klinikka). Aallokon twist-huomio on
         siirretty omaan laatikkoonsa "yleistä purjehdustietoa" -merkinnällä, ei enää sekoitettuna
         folkkarin ohjeiden sekaan. Käytiin läpi kaikki neljä trimmiopasta ja lisättiin puuttuneet
-        säädöt: perähuoli/hekki (North Sails/Elvström/HSK), kicki/puomivantti (North Sails) ja
+        säädöt: takaharus/hekki (North Sails/Elvström/HSK), kicki/puomivantti (North Sails) ja
         fokan nostoliinan kireys (North Sails). Miehistön sijoitusohje täydennetty HSK-klinikan
         omalla neuvolla (paino levangin etupuolelle kryssillä).
   v1.0  Neuvot suodatetaan nyt purjemerkin mukaan: North Sailsin neuvot näkyvät vain North Sailsin
         purjeille, Heikkilä Sailmakerin neuvot vain Heikkilän purjeille. Elvströmin neuvot näkyvät
         aina (soveltuvat molemmille), samoin yleiset HSK-trimmiklinikan neuvot. Jos useampi lähde
         pätee samaan aiheeseen, kaikki näytetään omilla lähdemerkinnöillään samassa solussa.
+  v1.1  Korjattu termi: "perähuoli" -> "takaharus" (hekki).
+  v1.2  Korjattu termit: "leeseen"/"leeteen" -> "leehen", ja "kokpitin" -> "sitloodan".
 */
-const VERSION = 'v1.0';
+const VERSION = 'v1.2';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -478,13 +480,13 @@ const coreData = {
       {appliesTo:'elvstrom', src:'Elvström', text:'Puomi jopa 25 cm keskilinjasta, hieman kireämmällä — ei niin paljon, että kolme ylintä lattaa kiertyvät puomin ohi.'}
     ],
     strong: [
-      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut leeseen — vähentää kallistusta ja peräsimen painetta.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki päästetään leeteen, skuutit pidetään kireällä.'},
-      {appliesTo:'elvstrom', src:'Elvström', text:'Puomi enemmän leeseen, korkeimmillaan noin 20 cm kokpitin reunasta.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut leehen — vähentää kallistusta ja peräsimen painetta.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki päästetään leehen, skuutit pidetään kireällä.'},
+      {appliesTo:'elvstrom', src:'Elvström', text:'Puomi enemmän leehen, korkeimmillaan noin 20 cm sitloodan reunasta.'}
     ],
     extreme: [
-      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut selvästi leeseen. Jos kallistus jatkuu, päästä levankia lisää ennen skuutin löysäämistä.'},
-      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki selvästi leeteen, sama periaate kuin kovassa tuulessa.'}
+      {appliesTo:'northsails', src:'North Sails', text:'Levankivaunut selvästi leehen. Jos kallistus jatkuu, päästä levankia lisää ennen skuutin löysäämistä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Levanki selvästi leehen, sama periaate kuin kovassa tuulessa.'}
     ]
   },
   cunningham: {
@@ -704,7 +706,7 @@ function renderRecommendation(){
 
   html += groupHeader('Masto');
   html += singleRow('Mastonjalka', mastInfo.foot);
-  html += row('Perähuoli (hekki)', 'backstay');
+  html += row('Takaharus (hekki)', 'backstay');
 
   html += groupHeader('Isopurje');
   html += row('Puomiliikki', 'outhaul');
