@@ -265,8 +265,13 @@
         muokattu tekstit painottamaan ensin vanttien kireyttä (teko) ja vasta sitten
         keulaharuksen taipumaa (tulos) — vastaa suoraan kysymykseen sivuvanttien kireydestä
         eri tuulissa.
+  v1.8  Lisätty miehistön sijoitteluun lenssin (myötätuulen) ohje kryssin rinnalle, selkeästi
+        omilla otsikoillaan: kryssillä paino levangin etupuolelle (HSK), lenssillä kevyellä
+        tuulella gastit maston keulapuolelle ja pinnamies levangin etupuolelle (HSK) sekä masto
+        eteenpäin nojaavaksi miehistön ja takaharuksen avulla (Elvström); kovemmalla lenssillä
+        paino keskilinjalle ja pituussuunnassa keskelle venettä (HSK).
 */
-const VERSION = 'v1.7';
+const VERSION = 'v1.8';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -719,8 +724,22 @@ function crewNoteFor(band, total){
   else extra = (label === 'raskas')
     ? 'Painava miehistö pitää veneen pystyssä pidempään kuin kevyempi porukka — voitte odottaa hieman kauemmin ennen kuin päästätte purjeista voimaa (yleistä purjehdustietoa).'
     : 'Kevyemmällä miehistöllä kannattaa päästää purjeista voimaa aikaisemmin kuin painavammalla porukalla (yleistä purjehdustietoa).';
-  const hsk = 'Kryssillä tavoitteena on saada koko miehistön paino levangin etupuolelle. <span class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</span>';
-  return '<b>Miehistö:</b> ' + total + ' kg yhteensä (' + label + ' miehistö). ' + hsk + '<br><br>' + extra;
+
+  const upwind = 'Kryssillä tavoitteena on saada koko miehistön paino levangin etupuolelle. ' +
+    '<span class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</span>';
+
+  const downwind = (band === 'light')
+    ? 'Lenssillä, varsinkin kevyellä tuulella, tavoitteena on saada molemmat gastit maston keulapuolelle ja pinnamies levangin etupuolelle. ' +
+      '<span class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</span><br>' +
+      'Halutaan myös maston nojaavan eteenpäin: yksi miehistön jäsen etukannelle ja takaharus löysemmälle, jolloin masto painuu mastoaukon etureunaan. ' +
+      '<span class="src">Elvström</span>'
+    : 'Lenssillä paino pidetään keskilinjalla ja keskellä venettä pituussuunnassa — vältetään keulan/perän kastumista ja hidastavaa nokkiintumista. ' +
+      '<span class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</span>';
+
+  return '<b>Miehistö:</b> ' + total + ' kg yhteensä (' + label + ' miehistö).' +
+    '<div style="margin-top:10px;"><b>Kryssillä:</b> ' + upwind + '</div>' +
+    '<div style="margin-top:10px;"><b>Lenssillä:</b> ' + downwind + '</div>' +
+    '<div style="margin-top:10px;">' + extra + '</div>';
 }
 
 function renderRecommendation(){
