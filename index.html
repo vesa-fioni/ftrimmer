@@ -98,6 +98,8 @@
   .note-box b{color:var(--sea-deep);}
 
   footer{margin-top:32px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#7c8b96;border-top:1px solid rgba(15,36,56,0.2);padding-top:10px;}
+  footer a{color:#7c8b96;text-decoration:underline;}
+  footer a:hover{color:var(--sea);}
 </style>
 </head>
 <body>
@@ -184,7 +186,11 @@
   <footer>
     Sää ja aallokko: Ilmatieteen laitos, avoin data (CC BY 4.0) — tuuli asemalta Harmaja, aallokko Suomenlinnan poijusta.
     Trimmiohjeet koottu North Sailsin, Paul Elvströmin, Heikkilä Sailmakerin ja HSK-trimmiklinikan (Kæstel &amp; Lindberg)
-    muistiinpanoista. Tämä on lähtökohta — veneen oma tasapaino ja olosuhteet ratkaisevat aina viimeksi.
+    muistiinpanoista. Aallokon vaikutus purjeen kiertoon (twist) perustuu David Dellenbaughin
+    <a href="https://www.speedandsmarts.com/" target="_blank" rel="noopener">Speed &amp; Smarts</a> -julkaisuun
+    (Dellenbaugh oli America's Cup -taktikko America³:n puolustuksessa 1992, ja Speed &amp; Smarts on yksi
+    kilpapurjehduksen arvostetuimmista trimmi- ja taktiikkajulkaisuista). Tämä on lähtökohta — veneen oma
+    tasapaino ja olosuhteet ratkaisevat aina viimeksi.
   </footer>
 
 </div>
@@ -203,8 +209,12 @@
   v0.5  Korjattu termi: isopurjeen alareunan säätököysi on puomiliikki (outhaul), ei "pohjaköysi".
   v0.6  Lisätty levanki (traveller) trimmisuositukseen — puuttui aiemmin kokonaan, vaikka
         se on isopurjeen tärkeimpiä säätöjä North Sailsin ohjeen mukaan.
+  v0.7  Korjattu kirjoitusvirhe "hakemet" -> "haet" levanki-tekstissä.
+  v0.8  Aallokon vaikutus purjeen kiertoon (twist) liitetty suoraan Cunningham- ja Levanki-riveihin,
+        ei enää vain erilliseen huomiolaatikkoon. Lähteeksi lisätty David Dellenbaughin Speed & Smarts
+        -julkaisu, joka on yksi kilpapurjehduksen arvostetuimmista trimmilähteistä.
 */
-const VERSION = 'v0.6';
+const VERSION = 'v0.8';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -409,7 +419,7 @@ const core = {
     isopurjeen_pohja: 'Puomiliikki noin 1,5 cm merkistä irti.',
     luffi: 'Cunninghamia kiristetään sen verran, että etureunan rypyt häviävät — ei enempää.',
     fokka: 'Skuuttipiste perusasennossa. Suojan puolen virtauslanka kiinni, tuulen puolen hieman höllä.',
-    levanki: 'Levankivaunut veneen keskilinjalle. Säädä skuutin parina, kun hakemet isopurjeen perustrimmiä.'
+    levanki: 'Levankivaunut veneen keskilinjalle. Säädä skuutin parina, kun haet isopurjeen perustrimmiä.'
   },
   strong: {
     isopurjeen_pohja: 'Puomiliikki kokonaan merkkiin — purje litteäksi alaosasta.',
@@ -456,12 +466,28 @@ const sailByBrand = {
   }
 };
 
+// Aallokon vaikutus purjeen kiertoon (twist). Lähde: Speed & Smarts, David Dellenbaugh —
+// "Take Control of Your Mainsail: Traveler" (ks. footer). Isossa aallokossa purjetta ei voi
+// trimmata yhtä tiukalle kuin tasaisessa vedessä, koska sen täytyy jaksaa kiihdyttää venettä
+// aaltojen läpi. Tämä koskee myös keskituulta, ei vain kovaa tuulta.
+function waveTwistLevel(h){
+  if(h == null) return 'none';
+  if(h < 0.3) return 'none';
+  if(h < 0.8) return 'moderate';
+  return 'high';
+}
+
+const waveTwistAddon = {
+  moderate: ' Aallokko (lisää kiertoa hieman normaaliin nähden): löysää tätä säätöä hitusen ja pidä levankia normaalia korkeampana.',
+  high: ' Aallokko vaatii selvästi enemmän kiertoa kuin tuulen nopeus yksinään edellyttäisi — löysää tätä säätöä ja pidä levanki ylempänä tuulen puolella, jotta purje jaksaa kiihdyttää venettä aaltojen läpi (lähde: Speed & Smarts, D. Dellenbaugh).'
+};
+
 function waveNoteFor(h){
   if(h == null) return 'Aallokkotietoa ei ole käytössä — syötä arvo itse jos haluat sen huomioitavan.';
   if(h < 0.2) return 'Tyyni vesi (' + h.toFixed(2) + ' m). Perustrimmi riittää, kallistus ei nosta peräosaa aalloista.';
   if(h < 0.5) return 'Pieni maininki (' + h.toFixed(2) + ' m). Ei syytä muuttaa perustrimmiä.';
-  if(h < 1.0) return 'Kohtalainen aallokko (' + h.toFixed(2) + ' m). Anna purjeen takareunan kiertyä hieman enemmän — se leventää ohjauskulmaa ja pitää vauhdin yllä aaltojen välissä.';
-  return 'Kova aallokko (' + h.toFixed(2) + ' m). Löysää purjeita hieman lisää ja salli enemmän kiertoa. Tarkkaile maston pumppaamista, kun vene menee laineiden yli.';
+  if(h < 1.0) return 'Kohtalainen aallokko (' + h.toFixed(2) + ' m). Cunninghamiin ja levankiin on jo lisätty huomio kierron kasvattamisesta alla olevassa taulukossa.';
+  return 'Kova aallokko (' + h.toFixed(2) + ' m). Löysää purjeita ja salli selvästi enemmän kiertoa (katso taulukon Cunningham- ja Levanki-rivit) — tässä aallokossa se on tärkeämpää kuin pelkkä tuulen nopeus antaisi ymmärtää. Tarkkaile myös maston pumppaamista, kun vene menee laineiden yli.';
 }
 
 function crewLabel(total){
@@ -497,10 +523,13 @@ function renderRecommendation(){
   let html = '<span class="band' + (isWarn?' warn':'') + '">' + bandLabel[band] + '</span>';
   html += '<h2 class="rec-title">Näin trimmaat tässä tuulessa</h2>';
   html += '<table class="trim">';
+  const twistLevel = waveTwistLevel(state.waveHeight);
+  const twistAddon = waveTwistAddon[twistLevel] || '';
+
   html += '<tr><td class="k">Mastonjalka</td><td>' + mastInfo.foot + '</td></tr>';
   html += '<tr><td class="k">Puomiliikki</td><td>' + coreInfo.isopurjeen_pohja + '</td></tr>';
-  html += '<tr><td class="k">Levanki</td><td>' + coreInfo.levanki + '</td></tr>';
-  html += '<tr><td class="k">Cunningham</td><td>' + coreInfo.luffi + '</td></tr>';
+  html += '<tr><td class="k">Levanki</td><td>' + coreInfo.levanki + twistAddon + '</td></tr>';
+  html += '<tr><td class="k">Cunningham</td><td>' + coreInfo.luffi + twistAddon + '</td></tr>';
   html += '<tr><td class="k">Fokka</td><td>' + coreInfo.fokka + '</td></tr>';
   html += '<tr><td class="k">Fokan skuuttipiste</td><td>' + sailInfo.jibLead + '</td></tr>';
   html += '<tr><td class="k">Ison purjeen muoto</td><td>' + sailInfo.mainDraft + '</td></tr>';
