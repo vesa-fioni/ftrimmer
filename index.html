@@ -93,6 +93,24 @@
   table.trim td{padding:10px 0;vertical-align:top;}
   table.trim td.k{width:34%;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--brass);padding-right:12px;}
 
+  .src{font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;color:var(--sea);letter-spacing:.02em;margin-top:4px;}
+  .src::before{content:"Lähde: ";color:#8a99a3;}
+
+  tr.group-row td{
+    padding-top:16px;padding-bottom:4px;border-top:none;
+    font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--sea);font-weight:600;
+  }
+  tr.group-row:first-child td{padding-top:0;}
+
+  .src-legend{font-family:"Helvetica Neue", Arial, sans-serif;font-size:12px;color:#5b6f7d;margin:0 0 14px;}
+
+  .general-tag{
+    display:inline-block;font-family:"Helvetica Neue", Arial, sans-serif;font-size:10px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--brass);
+    border:1px solid var(--brass);border-radius:2px;padding:2px 7px;margin-bottom:8px;
+  }
+
   .note-box{margin-top:14px;padding:14px 16px;background:rgba(28,93,120,0.07);border-left:3px solid var(--sea);font-size:14px;}
   .note-box.wave{border-left-color:var(--brass);background:rgba(179,135,74,0.08);}
   .note-box b{color:var(--sea-deep);}
@@ -213,8 +231,15 @@
   v0.8  Aallokon vaikutus purjeen kiertoon (twist) liitetty suoraan Cunningham- ja Levanki-riveihin,
         ei enää vain erilliseen huomiolaatikkoon. Lähteeksi lisätty David Dellenbaughin Speed & Smarts
         -julkaisu, joka on yksi kilpapurjehduksen arvostetuimmista trimmilähteistä.
+  v0.9  Lähteet eroteltu selkeästi: joka trimmirivin alla näkyy mistä oppaasta tieto on peräisin
+        (North Sails / Elvström / Heikkilä Sailmaker / HSK-klinikka). Aallokon twist-huomio on
+        siirretty omaan laatikkoonsa "yleistä purjehdustietoa" -merkinnällä, ei enää sekoitettuna
+        folkkarin ohjeiden sekaan. Käytiin läpi kaikki neljä trimmiopasta ja lisättiin puuttuneet
+        säädöt: perähuoli/hekki (North Sails/Elvström/HSK), kicki/puomivantti (North Sails) ja
+        fokan nostoliinan kireys (North Sails). Miehistön sijoitusohje täydennetty HSK-klinikan
+        omalla neuvolla (paino levangin etupuolelle kryssillä).
 */
-const VERSION = 'v0.8';
+const VERSION = 'v0.9';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -408,45 +433,60 @@ const bandLabel = {
   extreme: 'Erittäin kova tuuli · yli 12 m/s'
 };
 
+// Jokainen kohta on merkitty lähteellä (src), jotta käyttöliittymässä näkyy selvästi mikä
+// tieto on peräisin folkkarin omista trimmioppaista ja mistä oppaasta, erotuksena yleisestä
+// purjehdustiedosta (joka näkyy omassa erillisessä laatikossaan alempana).
 const core = {
   light: {
-    isopurjeen_pohja: 'Puomiliikki (outhaul) auki, purjeen alareuna noin 3 cm merkistä irti.',
-    luffi: 'Cunninghamia ei vielä käytetä. Anna ryppyjen näkyä etureunassa.',
-    fokka: 'Fokan skuutti hieman löysemmällä, ylälieve saa liehua 2–3 astetta.',
-    levanki: 'Levankivaunut 15–20 cm luuvartin puolelle (tuulen puolelle) — pitää puomin ylhäällä ja purjeen tehokkaana.'
+    outhaul:   {text:'Puomiliikki (outhaul) auki, purjeen alareuna noin 3 cm merkistä irti.', src:'North Sails'},
+    traveller: {text:'Levankivaunut 15–20 cm luuvartin puolelle (tuulen puolelle) — pitää puomin ylhäällä ja purjeen tehokkaana.', src:'North Sails'},
+    cunningham:{text:'Cunninghamia ei vielä käytetä. Anna ryppyjen näkyä etureunassa.', src:'North Sails'},
+    vang:      {text:'Ei käytetä kryssillä, täysin löysällä.', src:'North Sails'},
+    backstay:  {text:'Löysällä — kiristetty juuri sen verran, että se tukee mastoa, ei enempää.', src:'Elvström'},
+    jib_sheet: {text:'Fokan skuutti hieman löysemmällä, ylälieve saa liehua 2–3 astetta. Etureunassa saa olla pieniä ryppyjä.', src:'North Sails / Heikkilä Sailmaker'},
+    jib_halyard:{text:'Jätä pieniä ryppyjä etureunaan — se antaa parhaan muodon kevyellä tuulella.', src:'North Sails'}
   },
   medium: {
-    isopurjeen_pohja: 'Puomiliikki noin 1,5 cm merkistä irti.',
-    luffi: 'Cunninghamia kiristetään sen verran, että etureunan rypyt häviävät — ei enempää.',
-    fokka: 'Skuuttipiste perusasennossa. Suojan puolen virtauslanka kiinni, tuulen puolen hieman höllä.',
-    levanki: 'Levankivaunut veneen keskilinjalle. Säädä skuutin parina, kun haet isopurjeen perustrimmiä.'
+    outhaul:   {text:'Puomiliikki noin 1,5 cm merkistä irti.', src:'North Sails'},
+    traveller: {text:'Levankivaunut veneen keskilinjalle. Säädä skuutin parina, kun haet isopurjeen perustrimmiä.', src:'North Sails'},
+    cunningham:{text:'Cunninghamia kiristetään sen verran, että etureunan rypyt häviävät — ei enempää.', src:'North Sails'},
+    vang:      {text:'Ei käytetä kryssillä, löysällä.', src:'North Sails'},
+    backstay:  {text:'Hienosäädetään maston yläosan mukaan — kiristä hieman enemmän tasaisessa vedessä, löysemmällä aallokossa.', src:'Elvström'},
+    jib_sheet: {text:'Skuuttipiste perusasennossa. Suojan puolen virtauslanka kiinni, tuulen puolen hieman höllä.', src:'North Sails / Heikkilä Sailmaker'},
+    jib_halyard:{text:'Kiristä sen verran, että ryppyt häviävät. Ei enempää — liika kireys siirtää pussia liikaa eteen.', src:'North Sails'}
   },
   strong: {
-    isopurjeen_pohja: 'Puomiliikki kokonaan merkkiin — purje litteäksi alaosasta.',
-    luffi: 'Cunningham kiristetään voimakkaasti: purjeen pussi siirtyy eteenpäin ja takareuna avautuu.',
-    fokka: 'Skuuttipistettä siirretään taaemmas 1–2 reikäväliä, yläosa päästää tuulta läpi.',
-    levanki: 'Päästä levankivaunut leehen (myötätuulen puolelle) vähentämään kallistusta ja peräsimen painetta.'
+    outhaul:   {text:'Puomiliikki kokonaan merkkiin — purje litteäksi alaosasta.', src:'North Sails'},
+    traveller: {text:'Päästä levankivaunut leehen (myötätuulen puolelle) vähentämään kallistusta ja peräsimen painetta.', src:'North Sails'},
+    cunningham:{text:'Cunningham kiristetään voimakkaasti: purjeen pussi siirtyy eteenpäin ja takareuna avautuu.', src:'North Sails'},
+    vang:      {text:'Voidaan alkaa käyttää kryssillä (yli n. 9,3 m/s eli 18 solmua) puomin pitämiseen alhaalla puuskissa. Käytä varoen ja muista löysätä aina ennen lenssiä.', src:'North Sails'},
+    backstay:  {text:'Kiristetään: isopurjeen yläosa latistuu, takareuna avautuu ja keulaharuksen löysä pienenee, jolloin fokka madaltuu samalla.', src:'North Sails / HSK-klinikka'},
+    jib_sheet: {text:'Skuuttipistettä siirretään taaemmas 1–2 reikäväliä, yläosa päästää tuulta läpi. Etureuna ei saa alkaa lepattaa.', src:'North Sails / Heikkilä Sailmaker'},
+    jib_halyard:{text:'Kiristä ryppyjen poistoon; ei sen pidemmälle.', src:'North Sails'}
   },
   extreme: {
-    isopurjeen_pohja: 'Puomiliikki täysin kiinni merkissä.',
-    luffi: 'Cunningham täysin kireällä koko ajan.',
-    fokka: 'Skuuttipiste kauimpana takana. Harkitse pienempää fokkaa, jos vene ei pysy tasapainossa.',
-    levanki: 'Levankivaunut selvästi leeseen. Jos vene kallistuu silti liikaa, päästä levankia lisää ennen kuin löysäät skuuttia.'
+    outhaul:   {text:'Puomiliikki täysin kiinni merkissä.', src:'North Sails'},
+    traveller: {text:'Levankivaunut selvästi leeseen. Jos vene kallistuu silti liikaa, päästä levankia lisää ennen kuin löysäät skuuttia.', src:'North Sails'},
+    cunningham:{text:'Cunningham täysin kireällä koko ajan.', src:'North Sails'},
+    vang:      {text:'Käytössä kryssillä, mutta löysää aina ennen kääntymistä myötätuuleen — kireä kicki lenssillä voi katkaista puomin.', src:'North Sails'},
+    backstay:  {text:'Pidetään kireällä koko ajan. Merkitse hekin köysi esim. 20 cm välein, jotta löydät saman asetuksen nopeasti uudelleen.', src:'North Sails'},
+    jib_sheet: {text:'Skuuttipiste kauimpana takana. Harkitse pienempää fokkaa, jos vene ei pysy tasapainossa.', src:'North Sails / Heikkilä Sailmaker'},
+    jib_halyard:{text:'Sama periaate kuin muutenkin — kireys ryppyjen poistoon asti, ei pidemmälle.', src:'North Sails'}
   }
 };
 
 const mastByMaterial = {
   alu: {
-    light:  {foot: 'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan (North Sailsin alumiinimasto-ohje).'},
-    medium: {foot: 'Mastonjalka painettuna 16 mm taaksepäin.'},
-    strong: {foot: 'Mastonjalka painettuna 10 mm taaksepäin. Kiristä viulut, jos kaari ei pysy tasaisena ylhäältä alas.'},
-    extreme:{foot: 'Sama kuin kovassa tuulessa. Jos masto tärähtelee keskeltä, kiristä viuluja lisää.'}
+    light:  {foot: {text:'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan.', src:'North Sails'}},
+    medium: {foot: {text:'Mastonjalka painettuna 16 mm taaksepäin.', src:'North Sails'}},
+    strong: {foot: {text:'Mastonjalka painettuna 10 mm taaksepäin. Kiristä viulut, jos kaari ei pysy tasaisena ylhäältä alas.', src:'North Sails'}},
+    extreme:{foot: {text:'Sama kuin kovassa tuulessa. Jos masto tärähtelee keskeltä, kiristä viuluja lisää.', src:'North Sails'}}
   },
   wood: {
-    light:  {foot: 'Masto keskellä mastoaukkoa, esikaarto (prebend) noin 8 cm löysillä vanteilla (Elvström / HSK-klinikka).'},
-    medium: {foot: 'Sama esikaarto — hae viuluilla tasainen kaari koko matkalta, ei painotusta vain alaosaan.'},
-    strong: {foot: 'Siirrä mastonjalkaa vähän taaksepäin, jos masto painuu aukon etureunaan.'},
-    extreme:{foot: 'Sama kuin kovassa tuulessa. Harkitse kevyempää purjeyhdistelmää — puumasto ei kestä äärikuormaa yhtä hyvin kuin alumiini.'}
+    light:  {foot: {text:'Masto keskellä mastoaukkoa, esikaarto (prebend) noin 8 cm löysillä vanteilla.', src:'Elvström / HSK-klinikka'}},
+    medium: {foot: {text:'Sama esikaarto — hae viuluilla tasainen kaari koko matkalta, ei painotusta vain alaosaan.', src:'Elvström / HSK-klinikka'}},
+    strong: {foot: {text:'Siirrä mastonjalkaa vähän taaksepäin, jos masto painuu aukon etureunaan.', src:'Elvström'}},
+    extreme:{foot: {text:'Sama kuin kovassa tuulessa. Harkitse kevyempää purjeyhdistelmää — puumasto ei kestä äärikuormaa yhtä hyvin kuin alumiini.', src:'Elvström'}}
   }
 };
 
@@ -457,19 +497,19 @@ const mastMaterialNote = {
 
 const sailByBrand = {
   northsails: {
-    jibLead: 'Skuuttauspiste 58 cm keskilinjasta. Aloitusetäisyys keulaharuksen kiinnityspisteestä 2,65 m.',
-    mainDraft: 'Ison purjeen yläosan syvin kohta 47 % etureunasta laskettuna (North Sailsin oma G-piste).'
+    jibLead:  {text:'Skuuttauspiste 58 cm keskilinjasta. Aloitusetäisyys keulaharuksen kiinnityspisteestä 2,65 m.', src:'North Sails'},
+    mainDraft:{text:'Ison purjeen yläosan syvin kohta 47 % etureunasta laskettuna (North Sailsin oma G-piste).', src:'North Sails'}
   },
   heikkila: {
-    jibLead: 'Mitta keskilinjasta 450 mm, mitta keulaharuksen kiinnityspisteestä 2590–2610 mm.',
-    mainDraft: 'Isopurjeen syvin kohta pysyy paikallaan lähes koko kryssaustuulialueella — vain kova tuuli siirtää sitä hieman taaksepäin, jolloin etureunaa kiristetään korjaamaan tilanne.'
+    jibLead:  {text:'Mitta keskilinjasta 450 mm, mitta keulaharuksen kiinnityspisteestä 2590–2610 mm.', src:'Heikkilä Sailmaker'},
+    mainDraft:{text:'Isopurjeen syvin kohta pysyy paikallaan lähes koko kryssaustuulialueella — vain kova tuuli siirtää sitä hieman taaksepäin, jolloin etureunaa kiristetään korjaamaan tilanne.', src:'Heikkilä Sailmaker'}
   }
 };
 
-// Aallokon vaikutus purjeen kiertoon (twist). Lähde: Speed & Smarts, David Dellenbaugh —
-// "Take Control of Your Mainsail: Traveler" (ks. footer). Isossa aallokossa purjetta ei voi
-// trimmata yhtä tiukalle kuin tasaisessa vedessä, koska sen täytyy jaksaa kiihdyttää venettä
-// aaltojen läpi. Tämä koskee myös keskituulta, ei vain kovaa tuulta.
+// ---------- Yleinen purjehdustieto (EI folkkarin omasta trimmioppaasta) ----------
+// Tämä osio pidetään tarkoituksella erillään yllä olevasta trimmitietokannasta, koska
+// tieto ei ole peräisin folkkarin trimmioppaista vaan yleisestä kilpapurjehdustiedosta.
+// Lähde: David Dellenbaugh, Speed & Smarts (ks. footer).
 function waveTwistLevel(h){
   if(h == null) return 'none';
   if(h < 0.3) return 'none';
@@ -477,17 +517,12 @@ function waveTwistLevel(h){
   return 'high';
 }
 
-const waveTwistAddon = {
-  moderate: ' Aallokko (lisää kiertoa hieman normaaliin nähden): löysää tätä säätöä hitusen ja pidä levankia normaalia korkeampana.',
-  high: ' Aallokko vaatii selvästi enemmän kiertoa kuin tuulen nopeus yksinään edellyttäisi — löysää tätä säätöä ja pidä levanki ylempänä tuulen puolella, jotta purje jaksaa kiihdyttää venettä aaltojen läpi (lähde: Speed & Smarts, D. Dellenbaugh).'
-};
-
 function waveNoteFor(h){
   if(h == null) return 'Aallokkotietoa ei ole käytössä — syötä arvo itse jos haluat sen huomioitavan.';
-  if(h < 0.2) return 'Tyyni vesi (' + h.toFixed(2) + ' m). Perustrimmi riittää, kallistus ei nosta peräosaa aalloista.';
+  if(h < 0.2) return 'Tyyni vesi (' + h.toFixed(2) + ' m). Ei erillistä syytä lisätä kiertoa.';
   if(h < 0.5) return 'Pieni maininki (' + h.toFixed(2) + ' m). Ei syytä muuttaa perustrimmiä.';
-  if(h < 1.0) return 'Kohtalainen aallokko (' + h.toFixed(2) + ' m). Cunninghamiin ja levankiin on jo lisätty huomio kierron kasvattamisesta alla olevassa taulukossa.';
-  return 'Kova aallokko (' + h.toFixed(2) + ' m). Löysää purjeita ja salli selvästi enemmän kiertoa (katso taulukon Cunningham- ja Levanki-rivit) — tässä aallokossa se on tärkeämpää kuin pelkkä tuulen nopeus antaisi ymmärtää. Tarkkaile myös maston pumppaamista, kun vene menee laineiden yli.';
+  if(h < 1.0) return 'Kohtalainen aallokko (' + h.toFixed(2) + ' m). Lisää kiertoa hieman normaaliin nähden: löysää cunninghamia/skuuttia hitusen ja pidä levanki normaalia korkeampana, jotta purje jaksaa kiihdyttää venettä aaltojen välissä.';
+  return 'Kova aallokko (' + h.toFixed(2) + ' m). Tarvitset selvästi enemmän kiertoa kuin tuulen nopeus yksinään edellyttäisi — löysää cunninghamia/skuuttia ja pidä levanki ylempänä tuulen puolella. Tämä pätee vaikka tuuli olisi vain keskituulen luokkaa. Tarkkaile myös maston pumppaamista, kun vene menee laineiden yli.';
 }
 
 function crewLabel(total){
@@ -499,12 +534,13 @@ function crewLabel(total){
 function crewNoteFor(band, total){
   const label = crewLabel(total);
   let extra = '';
-  if(band === 'light') extra = 'Kevyellä tuulella paino siirretään myös hieman muita alemmas kokkaan päin, jos keulan pito tuntuu heikolta.';
-  else if(band === 'medium') extra = 'Keskituulella koko miehistö nojaa tasaisesti ulos, jotta vene pysyy tasaisessa kallistuksessa.';
+  if(band === 'light') extra = 'Kevyellä tuulella paino siirretään myös hieman muita alemmas kokkaan päin, jos keulan pito tuntuu heikolta (yleistä purjehdustietoa).';
+  else if(band === 'medium') extra = 'Keskituulella koko miehistö nojaa tasaisesti ulos, jotta vene pysyy tasaisessa kallistuksessa (yleistä purjehdustietoa).';
   else extra = (label === 'raskas')
-    ? 'Painava miehistö pitää veneen pystyssä pidempään kuin kevyempi porukka — voitte odottaa hieman kauemmin ennen kuin päästätte purjeista voimaa.'
-    : 'Kevyemmällä miehistöllä kannattaa päästää purjeista voimaa aikaisemmin kuin painavammalla porukalla.';
-  return '<b>Miehistö:</b> ' + total + ' kg yhteensä (' + label + ' miehistö). ' + extra;
+    ? 'Painava miehistö pitää veneen pystyssä pidempään kuin kevyempi porukka — voitte odottaa hieman kauemmin ennen kuin päästätte purjeista voimaa (yleistä purjehdustietoa).'
+    : 'Kevyemmällä miehistöllä kannattaa päästää purjeista voimaa aikaisemmin kuin painavammalla porukalla (yleistä purjehdustietoa).';
+  const hsk = 'Kryssillä tavoitteena on saada koko miehistön paino levangin etupuolelle. <span class="src">HSK-trimmiklinikka (Kæstel &amp; Lindberg)</span>';
+  return '<b>Miehistö:</b> ' + total + ' kg yhteensä (' + label + ' miehistö). ' + hsk + '<br><br>' + extra;
 }
 
 function renderRecommendation(){
@@ -518,26 +554,41 @@ function renderRecommendation(){
   const isWarn = band === 'extreme';
   const mastInfo = mastByMaterial[state.mast][band];
   const sailInfo = sailByBrand[state.sail];
-  const coreInfo = core[band];
+  const c = core[band];
+
+  const row = (label, item) =>
+    '<tr><td class="k">' + label + '</td><td>' + item.text +
+    '<div class="src">' + item.src + '</div></td></tr>';
+
+  const groupHeader = (label) =>
+    '<tr class="group-row"><td colspan="2">' + label + '</td></tr>';
 
   let html = '<span class="band' + (isWarn?' warn':'') + '">' + bandLabel[band] + '</span>';
   html += '<h2 class="rec-title">Näin trimmaat tässä tuulessa</h2>';
+  html += '<p class="src-legend">Kaikki alla oleva on peräisin folkkarin omista trimmioppaista — lähde näkyy joka rivin alla.</p>';
   html += '<table class="trim">';
-  const twistLevel = waveTwistLevel(state.waveHeight);
-  const twistAddon = waveTwistAddon[twistLevel] || '';
 
-  html += '<tr><td class="k">Mastonjalka</td><td>' + mastInfo.foot + '</td></tr>';
-  html += '<tr><td class="k">Puomiliikki</td><td>' + coreInfo.isopurjeen_pohja + '</td></tr>';
-  html += '<tr><td class="k">Levanki</td><td>' + coreInfo.levanki + twistAddon + '</td></tr>';
-  html += '<tr><td class="k">Cunningham</td><td>' + coreInfo.luffi + twistAddon + '</td></tr>';
-  html += '<tr><td class="k">Fokka</td><td>' + coreInfo.fokka + '</td></tr>';
-  html += '<tr><td class="k">Fokan skuuttipiste</td><td>' + sailInfo.jibLead + '</td></tr>';
-  html += '<tr><td class="k">Ison purjeen muoto</td><td>' + sailInfo.mainDraft + '</td></tr>';
+  html += groupHeader('Masto');
+  html += row('Mastonjalka', mastInfo.foot);
+  html += row('Perähuoli (hekki)', c.backstay);
+
+  html += groupHeader('Isopurje');
+  html += row('Puomiliikki', c.outhaul);
+  html += row('Levanki', c.traveller);
+  html += row('Cunningham', c.cunningham);
+  html += row('Kicki (puomivantti)', c.vang);
+  html += row('Muoto', sailInfo.mainDraft);
+
+  html += groupHeader('Fokka');
+  html += row('Skuutti', c.jib_sheet);
+  html += row('Nostoliina', c.jib_halyard);
+  html += row('Skuuttipiste', sailInfo.jibLead);
+
   html += '</table>';
   html += '<p style="font-family:\'Helvetica Neue\',Arial,sans-serif;font-size:12.5px;color:#5b6f7d;margin-top:4px;">' + mastMaterialNote[state.mast] + '</p>';
   els.recWrap.innerHTML = html;
 
-  els.waveNote.innerHTML = '<b>Aallokko:</b> ' + waveNoteFor(state.waveHeight);
+  els.waveNote.innerHTML = '<div class="general-tag">Yleistä purjehdustietoa — ei folkkarin trimmioppaasta</div><b>Aallokko:</b> ' + waveNoteFor(state.waveHeight);
 
   const total = state.crew.reduce((a,b)=>a+b,0);
   els.crewNote.innerHTML = crewNoteFor(band, total);
