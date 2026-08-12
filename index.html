@@ -176,10 +176,10 @@
 
   <div class="setup">
     <div class="setup-row">
-      <div class="setup-label">Masto</div>
+      <div class="setup-label">Mastonjalka</div>
       <div class="toggle-group" id="mastGroup">
-        <button class="toggle active" data-val="alu">Alumiini</button>
-        <button class="toggle" data-val="wood">Puu</button>
+        <button class="toggle active" data-val="alu">Liikkuva jalka (mm-säätö)</button>
+        <button class="toggle" data-val="wood">Kiinteä jalka (vanttisäätö)</button>
       </div>
     </div>
     <div class="setup-row">
@@ -277,8 +277,14 @@
         North Sailsin oman ohjeen vastaista ja hidastaa venettä. Korjattu alumiini- ja puumaston
         kaikki tuuliluokat. Lisätty myös Heikkilä Sailmakerin oma näkemys viuluista (paine
         otetaan kovalla tuulella hekillä, ei viuluja kiristämällä).
+  v2.0  Nimetty "Masto"-valinta uudelleen "Mastonjalka"-valinnaksi: "Liikkuva jalka (mm-säätö)" /
+        "Kiinteä jalka (vanttisäätö)". North Sailsin jako menee jalkatyypin mukaan, ei
+        rakennusmateriaalin — puumastossa voi olla liikkuva jalka (kuten käyttäjän omassa
+        veneessä), jolloin oikea valinta on "liikkuva jalka" vaikka masto on puuta. Huom:
+        materiaalikohtainen puumaston esikaarron vapautus -muistutus näkyy nyt molemmissa
+        vaihtoehdoissa, koska sitä ei eroteltu erilliseksi valinnaksi.
 */
-const VERSION = 'v1.9';
+const VERSION = 'v2.0';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -701,8 +707,8 @@ const mastByMaterial = {
 };
 
 const mastMaterialNote = {
-  alu: 'Alumiinimasto pitää muotonsa — samat mitat toimivat purjehduskerrasta toiseen.',
-  wood: 'Puumasto joustaa herkemmin. Muista vapauttaa esikaarto (prebend) aina purjehduksen jälkeen, jotta masto ei ala pysyvästi taipua.'
+  alu: 'Liikkuva jalka mahdollistaa millilleen tarkan säädön joka purjehduskerralla. Jos mastosi on puuta mutta jalka liikkuu kiskolla, käytä tätä vaihtoehtoa — kyse on jalkatyypistä, ei materiaalista. Muista puumaston kanssa vapauttaa esikaarto (prebend) purjehduksen jälkeen, jotta masto ei ala pysyvästi taipua.',
+  wood: 'Kiinteä jalka lukitaan paikoilleen mastoa pystytettäessä, ja säätö tehdään sen jälkeen vanttien ja viulujen kireydellä. Muista puumaston kanssa vapauttaa esikaarto (prebend) purjehduksen jälkeen, jotta masto ei ala pysyvästi taipua.'
 };
 
 const sailByBrand = {
