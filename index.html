@@ -62,6 +62,26 @@
   .manual input{width:70px;padding:6px 8px;border:1px solid var(--line);border-radius:2px;font-size:13px;}
 
   .divider{display:flex;align-items:center;gap:10px;margin:30px 0 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);}
+
+  details.collapsible{
+    margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:2px;
+    padding:14px 18px;
+  }
+  details.collapsible summary{
+    cursor:pointer;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600;
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.collapsible summary::-webkit-details-marker{display:none;}
+  details.collapsible summary::before{
+    content:"▸";display:inline-block;transition:transform .15s ease;font-size:10px;color:var(--sea);
+  }
+  details.collapsible[open] summary::before{transform:rotate(90deg);}
+  details.collapsible .summary-hint{
+    text-transform:none;letter-spacing:0;color:#8a99a3;font-weight:400;font-size:11.5px;
+  }
+  details.collapsible > *:not(summary){margin-top:14px;}
+  details.collapsible .src-legend{margin-bottom:0;}
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);opacity:.35;}
 
   /* setup panel */
@@ -199,9 +219,11 @@
     </div>
   </div>
 
-  <div class="divider">Maston lähtöasento</div>
-  <p class="src-legend" style="margin-top:-6px;">Tämä tehdään kertaalleen mastoa pystytettäessä/trimmatessa — ei muutu tuulen mukaan. Tuulikohtaiset säädöt (alla) lähtevät tästä pohjasta.</p>
-  <div id="baseSetupWrap"></div>
+  <details class="collapsible">
+    <summary>Maston lähtöasento <span class="summary-hint">— avaa, jos säädät mastoa alusta alkaen</span></summary>
+    <p class="src-legend">Tämä tehdään kertaalleen mastoa pystytettäessä/trimmatessa — ei muutu tuulen mukaan. Tuulikohtaiset säädöt (alla) lähtevät tästä pohjasta.</p>
+    <div id="baseSetupWrap"></div>
+  </details>
 
   <div class="divider">Trimmisuositus</div>
 
@@ -294,8 +316,13 @@
         mitta B 1350–1360 mm, HSK 1315–1320 mm) sekä vanttien peruskireys (Heikkilän
         hekki-menetelmä). Aiemmin sovellus vain sanoi "vantteja kiristetään" kertomatta mistä
         lähtöasennosta liikutaan.
+  v2.2  Korjattu virheellinen termi "nostopeli" -> "puomin kiinnike" (gooseneck on puomin ja
+        maston välinen nivelkiinnike, ei nostolaite). "Maston lähtöasento" -osio muutettu
+        avattavaksi (details/summary) ja piilotettu oletuksena, koska sovelluksen pääkäyttö on
+        hakea trimmivinkit sen hetkiseen keliin — lähtöasento-ohjeet ovat vain harvoin
+        tarvittavaa taustatietoa.
 */
-const VERSION = 'v2.1';
+const VERSION = 'v2.2';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -726,7 +753,7 @@ const baseSetup = [
     label: 'Maston keskitys ja pystysuuntaisuus',
     entries: [
       {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Masto pitää ensin saada veneen keskilinjalle, pystyyn sivusuunnassa ja aivan mastoaukon takareunaan. Tarkista tämä kannen läpiviennistä — kansanveneet ovat usein laidoiltaan epäsymmetrisiä, älä luota pelkkiin puolelta toiselle otettuihin mittoihin.'},
-      {appliesTo:'northsails', src:'North Sails', text:'Varmista, että masto on pystysuorassa: siirrä kumpaakin vantin osaa mastoa pitkin ja merkitse kohta, joka täsmää nostopelin (gooseneck) yläreunan kanssa. Kiinnitä vantit takaisin kansikiinnikkeisiin ja mittaa etäisyys merkistä vantinruuviin — etäisyyden tulee olla sama molemmilla puolilla.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Varmista, että masto on pystysuorassa: siirrä kumpaakin vantin osaa mastoa pitkin ja merkitse kohta, joka täsmää puomin kiinnikkeen (gooseneck) yläreunan kanssa. Kiinnitä vantit takaisin kansikiinnikkeisiin ja mittaa etäisyys merkistä vantinruuviin — etäisyyden tulee olla sama molemmilla puolilla.'},
       {appliesTo:'elvstrom', src:'Elvström', text:'Kun masto on pystyssä ilman purjeita ja miehistöä, sen tulisi olla pystysuorassa. Normaalilla purjehdusnopeudella miehistön paino kallistaa mastoa hieman taaksepäin.'}
     ]
   },
@@ -742,7 +769,7 @@ const baseSetup = [
   {
     label: 'Maston noja (rake)',
     entries: [
-      {appliesTo:'northsails', src:'North Sails', text:'Irrota keulaharus kannesta ja aseta se mastoa pitkin. Jännitä niin paljon kuin mahdollista ja merkitse kohta, joka täsmää nostopelin (gooseneck) yläreunan kanssa. Kiinnitä keulaharus takaisin — merkin tulisi olla 1,31 m kannesta mitattuna keulaharusta pitkin.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Irrota keulaharus kannesta ja aseta se mastoa pitkin. Jännitä niin paljon kuin mahdollista ja merkitse kohta, joka täsmää puomin kiinnikkeen (gooseneck) yläreunan kanssa. Kiinnitä keulaharus takaisin — merkin tulisi olla 1,31 m kannesta mitattuna keulaharusta pitkin.'},
       {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Säädä maston noja niin, että mitta B — keulaharuksen merkistä keularustin kohdalle kannessa — on 1350–1360 mm.'},
       {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Maston noja on 1315–1320 mm mitattuna keulastaagiin: varmista, että maston alimman merkintänauhan yläreuna on 1000 mm kannen yläpuolella, irrota keulastaagi ja jännitä se maston etureunaan, merkitse nauhan kohta staagiin, kiinnitä staagi takaisin ja mittaa etäisyys kannesta tähän merkkiin.'}
     ]
