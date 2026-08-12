@@ -270,8 +270,15 @@
         tuulella gastit maston keulapuolelle ja pinnamies levangin etupuolelle (HSK) sekä masto
         eteenpäin nojaavaksi miehistön ja takaharuksen avulla (Elvström); kovemmalla lenssillä
         paino keskilinjalle ja pituussuunnassa keskelle venettä (HSK).
+  v1.9  KORJAUS: viulujen (jumpereiden) kireysohjeet olivat virheelliset. North Sailsin oma teksti
+        sanoo viulujen olevan löysällä KEVYELLÄ JA KOVALLA tuulella, kiristettynä 2–3 kierrosta
+        VAIN keskituulessa — ei progressiivisesti tuulen kasvaessa. Sovellus neuvoi aiemmin
+        virheellisesti kiristämään viuluja kovassa/erittäin kovassa tuulessa, joka on suoraan
+        North Sailsin oman ohjeen vastaista ja hidastaa venettä. Korjattu alumiini- ja puumaston
+        kaikki tuuliluokat. Lisätty myös Heikkilä Sailmakerin oma näkemys viuluista (paine
+        otetaan kovalla tuulella hekillä, ei viuluja kiristämällä).
 */
-const VERSION = 'v1.8';
+const VERSION = 'v1.9';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -646,15 +653,33 @@ function pickEntries(topic, band, brand){
 }
 
 const mastByMaterial = {
+  // North Sailsin oma teksti (Adjust the jumpers): "Jumpers are set relatively loose in
+  // light winds AND strong winds. In medium winds, tighten the common turnbuckle 2-3 turns."
+  // Viulut EIVÄT kiristy progressiivisesti tuulen kasvaessa — ne ovat löysällä sekä
+  // kevyellä että kovalla tuulella, ja kiristetään vain keskituulessa. Liian kireä viulu
+  // latistaa purjeen pohjan liikaa ja suoristaa yläosan väärin, mikä hidastaa venettä.
   alu: {
-    light:  [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan.'}],
-    medium: [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 16 mm taaksepäin.'}],
-    strong: [{appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 10 mm taaksepäin. Kiristä viulut, jos kaari ei pysy tasaisena ylhäältä alas.'}],
-    extreme:[{appliesTo:'northsails', src:'North Sails', text:'Sama kuin kovassa tuulessa. Jos masto tärähtelee keskeltä, kiristä viuluja lisää.'}]
+    light:  [
+      {appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 22 mm taaksepäin, masto koskee aukon takareunaan. Viulut löysällä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Viulut riittävän löysällä, jotta masto joustaa ja mukautuu tuulen paineen mukaan.'}
+    ],
+    medium: [
+      {appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 16 mm taaksepäin. Kiristä viulujen yhteistä ruuvia 2–3 kierrosta, jotta masto pysyy suorana — tavoite purjeen pussi 47 % etureunasta ylhäällä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Kiristä viuluja sen verran, että miehistö saa nojattua veneen hyvässä nousussa ja vauhdissa.'}
+    ],
+    strong: [
+      {appliesTo:'northsails', src:'North Sails', text:'Mastonjalka painettuna 10 mm taaksepäin. Viulut löysällä — samoin kuin kevyellä tuulella. Liian kireä viulu latistaa pohjan liikaa ja suoristaa yläosan väärin, mikä hidastaa venettä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Viuluja ei kiristetä enempää — paine otetaan pois isopurjeesta kiristämällä hekkiä voimakkaasti. Viulun kireys pysyy sellaisena, että masto kaareutuu tasaisesti hekkiä käytettäessä.'}
+    ],
+    extreme:[
+      {appliesTo:'northsails', src:'North Sails', text:'Sama kuin kovassa tuulessa — viulut pysyvät löysällä. Jos masto tärähtelee tai pumppaa keskeltä, tarkista ensin mastonjalan ja sivuvanttien kireys ennen viulujen koskemista.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Sama kuin kovassa tuulessa — paineen poisto hoidetaan hekillä, ei viuluja kiristämällä.'}
+    ]
   },
   // North Sails julkaisee alumiinimasto-ohjeen lisäksi oman, erillisen ohjeen puumastolle
   // (Nordisk Folkebåd Tuning-guide til træmast, northsails.com). Näytetään vain kun
-  // purjemerkki on North Sails — Elvströmin ja HSK:n ohjeet näytetään aina.
+  // purjemerkki on North Sails — Elvströmin ja HSK:n ohjeet näytetään aina. Sama periaate
+  // pätee: viulut löysällä kevyellä ja kovalla tuulella, kiristetty vain keskituulessa.
   wood: {
     light:  [
       {appliesTo:'elvstrom', src:'Elvström / HSK-klinikka', text:'Masto keskellä mastoaukkoa, esikaarto (prebend) noin 8 cm löysillä vanteilla.'},
@@ -666,11 +691,11 @@ const mastByMaterial = {
     ],
     strong: [
       {appliesTo:'elvstrom', src:'Elvström', text:'Siirrä mastonjalkaa vähän taaksepäin, jos masto painuu aukon etureunaan.'},
-      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Viulut kohtuullisen kireällä — tärkeintä on, että maston kaari pysyy tasaisena koko matkalta eikä painotu vain alaosaan.'}
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Viulut löysällä — samoin kuin kevyellä tuulella. Tärkeintä on, että maston kaari pysyy tasaisena koko matkalta; liian kireä viulu latistaa alaosan liikaa ja hidastaa venettä.'}
     ],
     extreme: [
       {appliesTo:'elvstrom', src:'Elvström', text:'Sama kuin kovassa tuulessa. Harkitse kevyempää purjeyhdistelmää — puumasto ei kestä äärikuormaa yhtä hyvin kuin alumiini.'},
-      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Tarkkaile maston kaaren tasaisuutta: liian kireä viulu latistaa purjeen alaosan liikaa, liian löysä jättää yläosan liian suoraksi.'}
+      {appliesTo:'northsails', src:'North Sails (puumasto-ohje)', text:'Viulut pysyvät löysällä. Tarkkaile maston kaaren tasaisuutta muilla säädöillä (mastonjalka, sivuvantit) — viulujen kiristäminen on tarkoitettu vain keskituulen suoristukseen.'}
     ]
   }
 };
