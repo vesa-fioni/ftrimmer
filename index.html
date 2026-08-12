@@ -321,8 +321,14 @@
         avattavaksi (details/summary) ja piilotettu oletuksena, koska sovelluksen pääkäyttö on
         hakea trimmivinkit sen hetkiseen keliin — lähtöasento-ohjeet ovat vain harvoin
         tarvittavaa taustatietoa.
+  v2.3  KORJAUS: North Sailsin "gooseneck mark" -viittaus oli väärin käännetty puomin
+        kiinnikkeen fyysiseksi reunaksi. Luokkasääntöjen (CR 6.1.11) mukaan kyse on maston
+        alamerkistä (mittanauha I, "Lower Mast Point"), joka sijaitsee 1000 mm kannesta —
+        sama piste, jonka myös HSK-trimmiklinikka mainitsee omassa ohjeessaan. Puomi liittyy
+        tähän merkkiin vain epäsuorasti: luokkasääntö vaatii, ettei puomi saa olla tämän
+        merkin alapuolella. Korjattu molemmat kohdat (Maston keskitys, Maston noja).
 */
-const VERSION = 'v2.2';
+const VERSION = 'v2.3';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -753,7 +759,7 @@ const baseSetup = [
     label: 'Maston keskitys ja pystysuuntaisuus',
     entries: [
       {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Masto pitää ensin saada veneen keskilinjalle, pystyyn sivusuunnassa ja aivan mastoaukon takareunaan. Tarkista tämä kannen läpiviennistä — kansanveneet ovat usein laidoiltaan epäsymmetrisiä, älä luota pelkkiin puolelta toiselle otettuihin mittoihin.'},
-      {appliesTo:'northsails', src:'North Sails', text:'Varmista, että masto on pystysuorassa: siirrä kumpaakin vantin osaa mastoa pitkin ja merkitse kohta, joka täsmää puomin kiinnikkeen (gooseneck) yläreunan kanssa. Kiinnitä vantit takaisin kansikiinnikkeisiin ja mittaa etäisyys merkistä vantinruuviin — etäisyyden tulee olla sama molemmilla puolilla.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Varmista, että masto on pystysuorassa: siirrä kumpaakin vantin osaa mastoa pitkin ja merkitse kohta, joka täsmää maston alamerkin (luokkasääntöjen mittanauha I, 1000 mm kannesta) yläreunan kanssa. Kiinnitä vantit takaisin kansikiinnikkeisiin ja mittaa etäisyys merkistä vantinruuviin — etäisyyden tulee olla sama molemmilla puolilla.'},
       {appliesTo:'elvstrom', src:'Elvström', text:'Kun masto on pystyssä ilman purjeita ja miehistöä, sen tulisi olla pystysuorassa. Normaalilla purjehdusnopeudella miehistön paino kallistaa mastoa hieman taaksepäin.'}
     ]
   },
@@ -769,7 +775,7 @@ const baseSetup = [
   {
     label: 'Maston noja (rake)',
     entries: [
-      {appliesTo:'northsails', src:'North Sails', text:'Irrota keulaharus kannesta ja aseta se mastoa pitkin. Jännitä niin paljon kuin mahdollista ja merkitse kohta, joka täsmää puomin kiinnikkeen (gooseneck) yläreunan kanssa. Kiinnitä keulaharus takaisin — merkin tulisi olla 1,31 m kannesta mitattuna keulaharusta pitkin.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Irrota keulaharus kannesta ja aseta se mastoa pitkin. Jännitä niin paljon kuin mahdollista ja merkitse kohta, joka täsmää maston alamerkin (luokkasääntöjen mittanauha I, 1000 mm kannesta) yläreunan kanssa. Kiinnitä keulaharus takaisin — merkin tulisi olla 1,31 m kannesta mitattuna keulaharusta pitkin.'},
       {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Säädä maston noja niin, että mitta B — keulaharuksen merkistä keularustin kohdalle kannessa — on 1350–1360 mm.'},
       {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Maston noja on 1315–1320 mm mitattuna keulastaagiin: varmista, että maston alimman merkintänauhan yläreuna on 1000 mm kannen yläpuolella, irrota keulastaagi ja jännitä se maston etureunaan, merkitse nauhan kohta staagiin, kiinnitä staagi takaisin ja mittaa etäisyys kannesta tähän merkkiin.'}
     ]
