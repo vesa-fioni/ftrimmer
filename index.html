@@ -199,6 +199,10 @@
     </div>
   </div>
 
+  <div class="divider">Maston lähtöasento</div>
+  <p class="src-legend" style="margin-top:-6px;">Tämä tehdään kertaalleen mastoa pystytettäessä/trimmatessa — ei muutu tuulen mukaan. Tuulikohtaiset säädöt (alla) lähtevät tästä pohjasta.</p>
+  <div id="baseSetupWrap"></div>
+
   <div class="divider">Trimmisuositus</div>
 
   <div id="recWrap"></div>
@@ -283,8 +287,15 @@
         veneessä), jolloin oikea valinta on "liikkuva jalka" vaikka masto on puuta. Huom:
         materiaalikohtainen puumaston esikaarron vapautus -muistutus näkyy nyt molemmissa
         vaihtoehdoissa, koska sitä ei eroteltu erilliseksi valinnaksi.
+  v2.1  Lisätty kokonaan uusi "Maston lähtöasento" -osio ennen tuulikohtaista taulukkoa.
+        Kertaalleen mastoa pystytettäessä/trimmatessa tehtävät toimenpiteet, joista tuulikohtaiset
+        säädöt lähtevät liikkeelle: maston keskitys ja pystysuuntaisuus, esikaarto ja jalan
+        peruspaikka, maston noja (rake, kolme eri mittatapaa: North Sails 1,31 m, Heikkilä
+        mitta B 1350–1360 mm, HSK 1315–1320 mm) sekä vanttien peruskireys (Heikkilän
+        hekki-menetelmä). Aiemmin sovellus vain sanoi "vantteja kiristetään" kertomatta mistä
+        lähtöasennosta liikutaan.
 */
-const VERSION = 'v2.0';
+const VERSION = 'v2.1';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
@@ -706,6 +717,62 @@ const mastByMaterial = {
   }
 };
 
+// ---------- Maston lähtöasento (kertasäätö, ei tuulisidonnainen) ----------
+// Nämä ovat mastoa pystytettäessä/trimmatessa kertaalleen tehtäviä toimenpiteitä, joista
+// tuulikohtaiset säädöt (coreData, mastByMaterial) lähtevät liikkeelle. Suodatetaan
+// purjemerkin mukaan samalla logiikalla kuin muu sisältö.
+const baseSetup = [
+  {
+    label: 'Maston keskitys ja pystysuuntaisuus',
+    entries: [
+      {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Masto pitää ensin saada veneen keskilinjalle, pystyyn sivusuunnassa ja aivan mastoaukon takareunaan. Tarkista tämä kannen läpiviennistä — kansanveneet ovat usein laidoiltaan epäsymmetrisiä, älä luota pelkkiin puolelta toiselle otettuihin mittoihin.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Varmista, että masto on pystysuorassa: siirrä kumpaakin vantin osaa mastoa pitkin ja merkitse kohta, joka täsmää nostopelin (gooseneck) yläreunan kanssa. Kiinnitä vantit takaisin kansikiinnikkeisiin ja mittaa etäisyys merkistä vantinruuviin — etäisyyden tulee olla sama molemmilla puolilla.'},
+      {appliesTo:'elvstrom', src:'Elvström', text:'Kun masto on pystyssä ilman purjeita ja miehistöä, sen tulisi olla pystysuorassa. Normaalilla purjehdusnopeudella miehistön paino kallistaa mastoa hieman taaksepäin.'}
+    ]
+  },
+  {
+    label: 'Esikaarto ja jalan peruspaikka',
+    entries: [
+      {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Siirrä maston jalkaa kengässään taaksepäin, kunnes mastoon muodostuu noin 8 cm:n esikaarto (prebend). Tämä onnistuu helpoiten, kun vantit ovat löysällä.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Sijoita masto jalkaansa niin, että mitta A — peräpeilin ja kannen kulmasta levangin yli maston alapään takareunaan — on 4970–5000 mm. Lukitse masto jalkaansa tähän paikkaan.'},
+      {appliesTo:'northsails', src:'North Sails', text:'Siirrä maston jalkaa taaksepäin, kunnes masto koskettaa juuri mastoaukon takareunaa. Tästä lähtöasennosta jalkaa siirretään edelleen tuulen mukaan (ks. alla oleva tuulikohtainen taulukko).'},
+      {appliesTo:'elvstrom', src:'Elvström', text:'Kun masto on pystyssä ilman purjeita, hyvä lähtökohta on, että se on mastoaukon keskellä. Aukon tulisi olla täydessä leveydessään (12 cm), ja maston tulisi olla vähintään 10 cm etureunasta, jotta se ei paina etureunaa käännyttäessä.'}
+    ]
+  },
+  {
+    label: 'Maston noja (rake)',
+    entries: [
+      {appliesTo:'northsails', src:'North Sails', text:'Irrota keulaharus kannesta ja aseta se mastoa pitkin. Jännitä niin paljon kuin mahdollista ja merkitse kohta, joka täsmää nostopelin (gooseneck) yläreunan kanssa. Kiinnitä keulaharus takaisin — merkin tulisi olla 1,31 m kannesta mitattuna keulaharusta pitkin.'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Säädä maston noja niin, että mitta B — keulaharuksen merkistä keularustin kohdalle kannessa — on 1350–1360 mm.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Maston noja on 1315–1320 mm mitattuna keulastaagiin: varmista, että maston alimman merkintänauhan yläreuna on 1000 mm kannen yläpuolella, irrota keulastaagi ja jännitä se maston etureunaan, merkitse nauhan kohta staagiin, kiinnitä staagi takaisin ja mittaa etäisyys kannesta tähän merkkiin.'}
+    ]
+  },
+  {
+    label: 'Vanttien peruskireys',
+    entries: [
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Kiristä perähuoli (hekki) niin, että masto taipuu ja saat vantit kiinnitettyä. Näin vanttiruuveja ei tarvitse koskaan löysätä myöhemmin — ne pysyvät aina "trimmissä".'},
+      {appliesTo:'heikkila', src:'Heikkilä Sailmaker', text:'Jos vantit eivät ole tässä trimmissä, mittaa etäisyydet vanttien merkeistä rusteihin ja aseta masto keskilinjalle erikseen molemmilta puolilta — veneet eivät useinkaan ole symmetrisiä.'},
+      {appliesTo:'general', src:'HSK-trimmiklinikka (Kæstel & Lindberg)', text:'Vanttien kireys on oikea, kun kryssillä purjehtiessa keulastaagin taipuma on 8 cm — tämä toimii tarkistuksena sen jälkeen, kun peruskireys on haettu.'}
+    ]
+  }
+];
+
+function renderBaseSetup(brand){
+  let html = '';
+  baseSetup.forEach(group => {
+    const entries = filterEntries(group.entries, brand);
+    if(!entries.length) return;
+    html += '<div style="margin-bottom:18px;">';
+    html += '<div class="setup-label" style="margin-bottom:8px;">' + group.label + '</div>';
+    entries.forEach(e => {
+      html += '<div class="entry">' + e.text + '<div class="src">' + e.src + '</div></div>';
+    });
+    html += '</div>';
+  });
+  els.baseSetupWrap = els.baseSetupWrap || document.getElementById('baseSetupWrap');
+  els.baseSetupWrap.innerHTML = html;
+}
+
 const mastMaterialNote = {
   alu: 'Liikkuva jalka mahdollistaa millilleen tarkan säädön joka purjehduskerralla. Jos mastosi on puuta mutta jalka liikkuu kiskolla, käytä tätä vaihtoehtoa — kyse on jalkatyypistä, ei materiaalista. Muista puumaston kanssa vapauttaa esikaarto (prebend) purjehduksen jälkeen, jotta masto ei ala pysyvästi taipua.',
   wood: 'Kiinteä jalka lukitaan paikoilleen mastoa pystytettäessä, ja säätö tehdään sen jälkeen vanttien ja viulujen kireydellä. Muista puumaston kanssa vapauttaa esikaarto (prebend) purjehduksen jälkeen, jotta masto ei ala pysyvästi taipua.'
@@ -774,6 +841,7 @@ function crewNoteFor(band, total){
 }
 
 function renderRecommendation(){
+  renderBaseSetup(state.sail);
   const band = getBand(state.windSpeed);
   if(!band){
     els.recWrap.innerHTML = '<p style="font-family:\'Helvetica Neue\',Arial,sans-serif;font-size:13px;color:#5b6f7d;">Odotetaan tuulinopeutta — syötä se yllä olevaan kenttään.</p>';
