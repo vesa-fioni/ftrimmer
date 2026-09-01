@@ -151,6 +151,7 @@
     <p class="eyebrow">Prototyyppi <span id="versionTag">v0.3</span> · sää + aallokko → trimmisuositus</p>
     <h1>Folkkarin trimmi tänään</h1>
     <p class="sub">Tuuli Harmajasta, aallokko Suomenlinnan poijusta — Ilmatieteen laitoksen avoin data</p>
+    <p class="sub" style="margin-top:8px;"><a href="fokka.html" style="color:var(--sea);">Fokan trimmidiagnostiikka →</a></p>
   </header>
 
   <!-- TUULI -->
@@ -327,8 +328,12 @@
         sama piste, jonka myös HSK-trimmiklinikka mainitsee omassa ohjeessaan. Puomi liittyy
         tähän merkkiin vain epäsuorasti: luokkasääntö vaatii, ettei puomi saa olla tämän
         merkin alapuolella. Korjattu molemmat kohdat (Maston keskitys, Maston noja).
+  v2.4  Lisätty linkki otsikon alle uuteen fokka.html-sivuun (Fokan trimmidiagnostiikka).
+        Fokan oire→syy-diagnostiikka on tarkoituksella oma sivunsa erillään sääpohjaisesta
+        trimmisuosituksesta, koska se vastaa eri kysymykseen: ei "mitä tuuli vaatii nyt"
+        vaan "mitä näkemäni oire fokassa todennäköisimmin tarkoittaa".
 */
-const VERSION = 'v2.3';
+const VERSION = 'v2.4';
 
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";

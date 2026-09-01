@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fokan trimmidiagnostiikka — Folkkarin trimmi</title>
+<style>
+  :root{
+    --ink:#0f2438;
+    --paper:#eef3f4;
+    --line:#0f2438;
+    --sea:#1c5d78;
+    --sea-deep:#0f2438;
+    --brass:#b3874a;
+    --ok:#3c6e4a;
+    --warn:#a5462b;
+    --hypo:#6b7885;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(15,36,56,0.035) 0px, rgba(15,36,56,0.035) 1px, transparent 1px, transparent 26px);
+    color:var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height:1.45;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:22px 18px 60px;}
+
+  header{border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:18px;}
+  .eyebrow{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);margin:0 0 6px;}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:.01em;}
+  .sub{font-family:"Helvetica Neue", Arial, sans-serif;font-size:13px;color:#465a68;margin:0;}
+  .sub a{color:var(--sea);}
+  .intro{font-size:15px;margin:14px 0 0;}
+
+  .divider{display:flex;align-items:center;gap:10px;margin:28px 0 14px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);opacity:.35;}
+
+  .cat-label{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:18px 0 8px;}
+  .cat-label:first-child{margin-top:0;}
+
+  .symptom-btn{
+    display:block;width:100%;text-align:left;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:14.5px;line-height:1.35;
+    padding:11px 14px;margin-bottom:8px;
+    background:#fff;color:var(--ink);border:1px solid var(--sea-deep);border-radius:2px;cursor:pointer;
+  }
+  .symptom-btn:active{transform:translateY(1px);}
+  .symptom-btn.active{background:var(--sea-deep);color:#fff;}
+
+  .diag-card{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:2px;padding:18px 20px;}
+  .badge{
+    display:inline-block;font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;
+    letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:2px;padding:3px 9px;margin-bottom:12px;
+  }
+  .badge.vahva{background:var(--ok);}
+  .badge.perusteltu{background:var(--brass);}
+  .badge.hypoteesi{background:var(--hypo);}
+
+  .diag-row{margin-bottom:14px;}
+  .diag-row:last-child{margin-bottom:0;}
+  .diag-k{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--brass);margin-bottom:3px;}
+  .diag-v{font-size:15px;}
+
+  .src{font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;color:var(--sea);letter-spacing:.02em;margin-top:10px;}
+  .src::before{content:"Lähteet: ";color:#8a99a3;}
+
+  details.collapsible{
+    margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:2px;
+    padding:14px 18px;
+  }
+  details.collapsible summary{
+    cursor:pointer;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:600;
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.collapsible summary::-webkit-details-marker{display:none;}
+  details.collapsible summary::before{content:"▸";display:inline-block;transition:transform .15s ease;font-size:10px;color:var(--sea);}
+  details.collapsible[open] summary::before{transform:rotate(90deg);}
+  details.collapsible > *:not(summary){margin-top:14px;}
+  .legend-row{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;font-size:13.5px;}
+  .legend-row:last-child{margin-bottom:0;}
+
+  .placeholder{font-family:"Helvetica Neue", Arial, sans-serif;font-size:13px;color:#5b6f7d;margin-top:22px;}
+
+  footer{margin-top:32px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#7c8b96;border-top:1px solid rgba(15,36,56,0.2);padding-top:10px;}
+  footer a{color:#7c8b96;text-decoration:underline;}
+  footer a:hover{color:var(--sea);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.0</span> · oire → syy → korjaus</p>
+    <h1>Mikä fokassa on vialla?</h1>
+    <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
+    <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
+    todennäköisimmän syyn, sen tärkeimmän vaihtoehdon ja miten erotat ne toisistaan.</p>
+  </header>
+
+  <div id="symptomWrap"></div>
+
+  <div id="diagWrap"></div>
+
+  <details class="collapsible">
+    <summary>Mitä näyttöluokat tarkoittavat</summary>
+    <div class="legend-row"><span class="badge vahva">Vahva näyttö</span><span>Folkbåt-kohtainen ohje ja vertaisarvioitu mekanismi tukevat samaa johtopäätöstä.</span></div>
+    <div class="legend-row"><span class="badge perusteltu">Perusteltu diagnoosi</span><span>Mekanismi ja lähteet tukevat päätelmää, mutta Folkbåt-kohtaista suoraa vahvistusta ei ole.</span></div>
+    <div class="legend-row"><span class="badge hypoteesi">Avoin hypoteesi</span><span>Perusteltu arvaus, mutta liian epävarma opetettavaksi varmana vastauksena — kokeile ja tarkkaile.</span></div>
+  </details>
+
+  <footer>
+    Diagnostiikka yhdistää North Sailsin, Heikkilä Sailmakerin ja HSK-trimmiklinikan
+    (Kæstel &amp; Lindberg) fokkaohjeet vertaisarvioituun purjeaerodynamiikan tutkimukseen
+    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026). Tämä on
+    ajattelun apuväline, ei korvaa oman veneen kokeilua ja seurantaa.
+  </footer>
+
+</div>
+
+<script>
+// ---------- Diagnostiikkatietokanta ----------
+// Rakennettu tutkimussuunnitelman WP1.7 (empiiriset trimmioppaat) ja WP1.8
+// (vertaisarvioitu mekanismikirjallisuus) yhdistelmästä. Ks. fokka_diagnostiikka_v1.md.
+
+const categories = [
+  {
+    label: 'Purjeen syvyys ja pussin sijainti',
+    items: [
+      {
+        id: 'syvin_edessa_syva',
+        havainto: 'Syvin kohta on liian edessä, ja koko fokka on selvästi syvä/pussikas',
+        ensisijainen: 'Forestay sag on liian suuri — vantit ovat liian löysällä nykyiseen tuuleen nähden.',
+        vaihtoehto: 'Falli on liian kireällä. Tämä on harvinaisempi selitys, jos koko purje on syvä eikä vain etuosa.',
+        erotteleva: 'Tarkista fokan kokonaissyvyys, ei vain etuosaa. Jos koko purje on selvästi syvä, epäile ensin sagia. Jos vain etuosa on syvä muun purjeen ollessa normaali, epäile fallia.',
+        korjaus: 'Kiristä sivuvantteja hieman — tämä pienentää keulaharuksen taipumaa. Tarkista taipuma uudelleen kryssillä (tavoite tuulesta riippuen 4–8 cm, ks. etusivun Maston lähtöasento).',
+        luokka: 'perusteltu',
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Morin et al. 2026 (FSI-tutkimus keulaharuksesta)']
+      },
+      {
+        id: 'syvin_edessa_ei_syva',
+        havainto: 'Syvin kohta on liian edessä, mutta fokka ei ole erityisen syvä kokonaisuudessaan',
+        ensisijainen: 'Falli on liian kireällä.',
+        vaihtoehto: 'Forestay sag — harvinaisempi selitys tässä yhdistelmässä.',
+        erotteleva: 'Katso etuliikkiä: jos rypyt ovat kokonaan poissa vaikka tuuli ei sitä vaatisi, kyse on todennäköisesti fallista. Tarkista myös kokonaissyvyys.',
+        korjaus: 'Löysää fallia hieman, kunnes etuliikkiin jää pieniä ryppyjä (kevyt/keski tuuli) tai rypyt juuri katoavat (kova tuuli). Älä kiristä fallia enempää kuin ryppyjen poistoon.',
+        luokka: 'vahva',
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Béguin & Breitsamter 2014']
+      },
+      {
+        id: 'taytelainen_etuosa',
+        havainto: 'Fokka näyttää voimakkaan täyteläiseltä koko etuosasta',
+        ensisijainen: 'Sag ja falli yhdessä liian suuria — yhdistelmävirhe, ei yksittäinen säätö.',
+        vaihtoehto: '—',
+        erotteleva: 'Tarkista erikseen kokonaissyvyys, syvimmän kohdan sijainti ja etuliikin rypyt. Korjaa ensin se säätö, jonka erotteleva havainto osuu selkeimmin kohdalleen.',
+        korjaus: 'Käy läpi järjestyksessä: 1) sag (vantit), 2) falli. Älä säädä molempia yhtä aikaa — muuten et opi kumpi oli syy.',
+        luokka: 'perusteltu',
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker']
+      }
+    ]
+  },
+  {
+    label: 'Etuliikin virtauslankojen käytös hitaassa nostossa',
+    items: [
+      {
+        id: 'etu_alin_ensin',
+        havainto: 'Alin telltale-pari (lähellä kantta) reagoi ensin, kun nouset hitaasti tuuleen',
+        ensisijainen: 'Skuuttipiste on todennäköisesti liian edessä.',
+        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
+        erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
+        korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, reagoiko ylin vai alin pari ensin seuraavalla nostolla.',
+        luokka: 'hypoteesi',
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
+      },
+      {
+        id: 'etu_ylin_ensin',
+        havainto: 'Ylin telltale-pari reagoi ensin, kun nouset hitaasti tuuleen',
+        ensisijainen: 'Skuuttipiste on todennäköisesti liian takana.',
+        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
+        erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
+        korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, reagoiko ylin vai alin pari ensin seuraavalla nostolla.',
+        luokka: 'hypoteesi',
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
+      }
+    ]
+  },
+  {
+    label: 'Keskilatan suunta',
+    items: [
+      {
+        id: 'keskilatta_sisaanpain',
+        havainto: 'Keskimmäinen latta on selvästi sisäänpäin keskilinjasta',
+        ensisijainen: 'Skuutti on liian kireällä.',
+        vaihtoehto: 'Forestay sag on muuttunut (esim. vantit kiristyneet purjehduksen aikana) ja siirtänyt koko purjeen muotoa.',
+        erotteleva: 'Tarkista fokan muu muoto ja etuliikin rypyt. Jos vain keskilatta on poikkeava muun purjeen ollessa normaali, kyse on skuutista.',
+        korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskilatan suunta uudelleen. Muista: suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
+        luokka: 'vahva',
+        lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014']
+      }
+    ]
+  }
+];
+
+// ---------- Renderöinti ----------
+
+const symptomWrap = document.getElementById('symptomWrap');
+const diagWrap = document.getElementById('diagWrap');
+
+function luokkaLabel(l){
+  return {vahva:'Vahva näyttö', perusteltu:'Perusteltu diagnoosi', hypoteesi:'Avoin hypoteesi'}[l] || l;
+}
+
+function renderSymptoms(){
+  let html = '';
+  categories.forEach(cat => {
+    html += '<div class="cat-label">' + cat.label + '</div>';
+    cat.items.forEach(item => {
+      html += '<button class="symptom-btn" data-id="' + item.id + '">' + item.havainto + '</button>';
+    });
+  });
+  symptomWrap.innerHTML = html;
+  symptomWrap.querySelectorAll('.symptom-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      symptomWrap.querySelectorAll('.symptom-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showDiagnosis(btn.dataset.id);
+    });
+  });
+}
+
+function findItem(id){
+  for(const cat of categories){
+    for(const item of cat.items){
+      if(item.id === id) return item;
+    }
+  }
+  return null;
+}
+
+function showDiagnosis(id){
+  const item = findItem(id);
+  if(!item) return;
+  let html = '<div class="diag-card">';
+  html += '<span class="badge ' + item.luokka + '">' + luokkaLabel(item.luokka) + '</span>';
+  html += '<div class="diag-row"><div class="diag-k">Ensisijainen epäily</div><div class="diag-v">' + item.ensisijainen + '</div></div>';
+  if(item.vaihtoehto && item.vaihtoehto !== '—'){
+    html += '<div class="diag-row"><div class="diag-k">Tärkeä vaihtoehto</div><div class="diag-v">' + item.vaihtoehto + '</div></div>';
+  }
+  html += '<div class="diag-row"><div class="diag-k">Miten erotat nämä toisistaan</div><div class="diag-v">' + item.erotteleva + '</div></div>';
+  html += '<div class="diag-row"><div class="diag-k">Pienin suositeltu korjaus</div><div class="diag-v">' + item.korjaus + '</div></div>';
+  html += '<div class="src">' + item.lahteet.join(', ') + '</div>';
+  html += '</div>';
+  diagWrap.innerHTML = html;
+  diagWrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+document.getElementById('versionTag').textContent = 'v1.0';
+renderSymptoms();
+</script>
+</body>
+</html>
