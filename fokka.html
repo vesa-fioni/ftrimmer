@@ -36,12 +36,32 @@
   .sub a{color:var(--sea);}
   .intro{font-size:15px;margin:14px 0 0;}
 
-  .divider{display:flex;align-items:center;gap:10px;margin:28px 0 14px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);}
+  /* Tuulilukema */
+  .wind-readout{
+    background:var(--card);border:1px solid var(--line);border-radius:2px;padding:12px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap;
+  }
+  .wind-readout .ws{font-size:20px;font-weight:600;color:var(--sea-deep);}
+  .wind-readout .ws .unit{font-size:12px;font-weight:400;color:#5b6f7d;}
+  .wind-readout .band-tag{
+    font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#fff;background:var(--sea);
+    padding:3px 9px;border-radius:2px;letter-spacing:.03em;
+  }
+  .wind-readout .wtime{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#8a99a3;}
+  .manual{margin-top:8px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:12.5px;color:#5b6f7d;display:none;align-items:center;gap:8px;flex-wrap:wrap;}
+  .manual.show{display:flex;}
+  .manual input{width:70px;padding:6px 8px;border:1px solid var(--line);border-radius:2px;font-size:13px;}
+  button{font-family:"Helvetica Neue", Arial, sans-serif;font-size:12.5px;padding:6px 11px;background:var(--sea-deep);color:#fff;border:none;border-radius:2px;cursor:pointer;}
+  button.secondary{background:transparent;color:var(--sea-deep);border:1px solid var(--sea-deep);}
+
+  /* Section-tason otsikot: sama kuvakieli kuin etusivun "Trimmisuositus"/"Veneen asetukset" -jaoissa,
+     jotta lukija tunnistaa nämä sivun rakenteeksi eikä tuloskortin sisällöksi. */
+  .divider{display:flex;align-items:center;gap:10px;margin:30px 0 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);}
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);opacity:.35;}
 
-  .cat-label{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:18px 0 8px;}
+  /* Havaintonapit */
+  .cat-label{font-family:"Helvetica Neue", Arial, sans-serif;font-size:13px;font-weight:600;color:var(--ink);margin:18px 0 8px;}
   .cat-label:first-child{margin-top:0;}
-
   .symptom-btn{
     display:block;width:100%;text-align:left;
     font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:14.5px;line-height:1.35;
@@ -51,22 +71,32 @@
   .symptom-btn:active{transform:translateY(1px);}
   .symptom-btn.active{background:var(--sea-deep);color:#fff;}
 
-  .diag-card{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:2px;padding:18px 20px;}
+  /* Diagnoosikortti — kaikki tämän sisällä on selkeästi "tulos", ei sivun rakennetta */
+  .diag-card{margin-top:22px;background:var(--card);border:2px solid var(--sea-deep);border-radius:2px;padding:18px 20px;}
   .badge{
     display:inline-block;font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;
-    letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:2px;padding:3px 9px;margin-bottom:12px;
+    letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:2px;padding:3px 9px;margin-bottom:14px;
   }
   .badge.vahva{background:var(--ok);}
   .badge.perusteltu{background:var(--brass);}
   .badge.hypoteesi{background:var(--hypo);}
 
-  .diag-row{margin-bottom:14px;}
+  .diag-row{margin-bottom:14px;padding-left:12px;border-left:2px solid rgba(15,36,56,0.12);}
   .diag-row:last-child{margin-bottom:0;}
-  .diag-k{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--brass);margin-bottom:3px;}
+  .diag-k{font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--brass);margin-bottom:3px;}
   .diag-v{font-size:15px;}
 
-  .src{font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;color:var(--sea);letter-spacing:.02em;margin-top:10px;}
+  .wind-note{margin-top:14px;padding:10px 12px;background:rgba(28,93,120,0.07);border-left:3px solid var(--sea);font-size:13.5px;}
+
+  .src{font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;color:var(--sea);letter-spacing:.02em;margin-top:14px;}
   .src::before{content:"Lähteet: ";color:#8a99a3;}
+
+  /* Referenssikuva */
+  .ref-wrap{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:16px;margin-top:16px;}
+  .ref-caption{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11.5px;color:#5b6f7d;margin-top:8px;}
+  .ref-legend{margin-top:14px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:12.5px;color:var(--ink);}
+  .ref-legend dt{font-weight:600;color:var(--sea-deep);float:left;clear:left;width:92px;}
+  .ref-legend dd{margin:0 0 6px 100px;color:#465a68;}
 
   details.collapsible{
     margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:2px;
@@ -84,8 +114,6 @@
   .legend-row{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;font-size:13.5px;}
   .legend-row:last-child{margin-bottom:0;}
 
-  .placeholder{font-family:"Helvetica Neue", Arial, sans-serif;font-size:13px;color:#5b6f7d;margin-top:22px;}
-
   footer{margin-top:32px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#7c8b96;border-top:1px solid rgba(15,36,56,0.2);padding-top:10px;}
   footer a{color:#7c8b96;text-decoration:underline;}
   footer a:hover{color:var(--sea);}
@@ -95,12 +123,81 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.0</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.1</span> · oire → syy → korjaus</p>
     <h1>Mikä fokassa on vialla?</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
     todennäköisimmän syyn, sen tärkeimmän vaihtoehdon ja miten erotat ne toisistaan.</p>
+
+    <div class="wind-readout">
+      <div>
+        <span class="ws"><span id="wsVal">–</span><span class="unit"> m/s</span></span>
+        <span class="band-tag" id="bandTag">tuuli haetaan…</span>
+      </div>
+      <span class="wtime" id="obsTimeWind"></span>
+    </div>
+    <div class="manual" id="manualWindRow">
+      <span>Tuulen nopeus:</span>
+      <input type="number" id="manualWindInput" min="0" max="40" step="0.5" placeholder="m/s">
+      <button id="manualWindApply">Käytä</button>
+      <button class="secondary" id="manualToggle">Syötä itse</button>
+    </div>
   </header>
+
+  <div class="ref-wrap">
+    <svg viewBox="0 0 320 440" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+      <!-- Oma yksinkertaistettu kaavakuva fokan osista ja havaintopisteistä.
+           Ei perustu NFIA:n viralliseen luokkapiirustukseen — vain nimeää samat termit. -->
+      <polygon points="70,20 40,380 250,380" fill="none" stroke="#0f2438" stroke-width="2"/>
+      <!-- keskilatta -->
+      <line x1="58" y1="215" x2="150" y2="215" stroke="#0f2438" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="156" y="219" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskilatta</text>
+      <!-- etuliikin havaintopisteet ETU1-4 -->
+      <circle cx="52" cy="335" r="3" fill="#1c5d78"/><text x="20" y="339" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
+      <circle cx="47" cy="270" r="3" fill="#1c5d78"/><text x="15" y="274" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-2</text>
+      <circle cx="61" cy="140" r="3" fill="#1c5d78"/><text x="12" y="144" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-3</text>
+      <circle cx="66" cy="70" r="3" fill="#1c5d78"/><text x="12" y="74" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-4</text>
+      <!-- takaliikin havaintopisteet -->
+      <circle cx="180" cy="290" r="3" fill="#a5462b"/><text x="186" y="294" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-1</text>
+      <circle cx="130" cy="160" r="3" fill="#a5462b"/><text x="136" y="164" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-2</text>
+      <!-- reunat -->
+      <text x="35" y="200" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68" transform="rotate(-84 35 200)">Etuliikki</text>
+      <text x="175" y="185" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68" transform="rotate(58 175 185)">Takaliikki</text>
+      <text x="130" y="398" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Alaliikki (jalka)</text>
+      <!-- kulmat -->
+      <text x="66" y="14" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Pää</text>
+      <text x="6" y="392" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Nokka</text>
+      <text x="252" y="378" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Nurkka</text>
+      <!-- skuutti ja skuuttipiste -->
+      <line x1="250" y1="380" x2="222" y2="408" stroke="#0f2438" stroke-width="1.5"/>
+      <circle cx="222" cy="408" r="3.5" fill="#b3874a"/>
+      <text x="230" y="412" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#b3874a">Skuuttipiste</text>
+      <text x="200" y="396" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Skuutti</text>
+      <!-- falli -->
+      <line x1="70" y1="20" x2="70" y2="4" stroke="#0f2438" stroke-width="1" marker-end="url(#arrow)"/>
+      <text x="76" y="12" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Falli</text>
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#0f2438"/>
+        </marker>
+      </defs>
+    </svg>
+    <p class="ref-caption">Oma yksinkertaistettu kaavakuva fokan osista — ei jäljennös luokan
+    virallisesta piirustuksesta, vain samojen termien sijoittelu.</p>
+    <dl class="ref-legend">
+      <dt>Etuliikki</dt><dd>Purjeen etureuna (luff). Pää–nokka-välinen sivu.</dd>
+      <dt>Takaliikki</dt><dd>Purjeen takareuna (leech). Pää–nurkka-välinen sivu.</dd>
+      <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot). Nokka–nurkka-välinen sivu.</dd>
+      <dt>Pää / Nokka / Nurkka</dt><dd>Head / tack / clew — purjeen kolme kulmaa.</dd>
+      <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös. Käytetään telltale-diagnostiikassa.</dd>
+      <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
+      <dt>Keskilatta</dt><dd>Fokan keskimmäinen latta — sen suunta on skuuttijännityksen tärkein havainto.</dd>
+      <dt>Skuuttipiste</dt><dd>Kohta kannella/ruffilla, johon skuutin kääntöplokki on kiinnitetty.</dd>
+      <dt>Falli</dt><dd>Fokan nostoköysi (halyard) — säätää fallin kireyttä.</dd>
+    </dl>
+  </div>
+
+  <div class="divider">Valitse havainto</div>
 
   <div id="symptomWrap"></div>
 
@@ -116,17 +213,108 @@
   <footer>
     Diagnostiikka yhdistää North Sailsin, Heikkilä Sailmakerin ja HSK-trimmiklinikan
     (Kæstel &amp; Lindberg) fokkaohjeet vertaisarvioituun purjeaerodynamiikan tutkimukseen
-    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026). Tämä on
-    ajattelun apuväline, ei korvaa oman veneen kokeilua ja seurantaa.
+    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026). Tuulihavainto:
+    Ilmatieteen laitos, avoin data (CC BY 4.0), asema Harmaja. Tämä on ajattelun apuväline,
+    ei korvaa oman veneen kokeilua ja seurantaa.
   </footer>
 
 </div>
 
 <script>
-// ---------- Diagnostiikkatietokanta ----------
-// Rakennettu tutkimussuunnitelman WP1.7 (empiiriset trimmioppaat) ja WP1.8
-// (vertaisarvioitu mekanismikirjallisuus) yhdistelmästä. Ks. fokka_diagnostiikka_v1.md.
+/*
+  VERSIOHISTORIA
+  v1.0  Ensimmäinen versio: oire→syy-diagnostiikka nappivalinnalla, näyttöluokat.
+  v1.1  Lisätty Harmajan tuulihavainto (sama FMI-rajapinta kuin etusivulla) — diagnoosikortti
+        näyttää nyt tuulikohtaisen sag/falli-tavoitearvon kontekstina, kun se on relevantti.
+        Korjattu visuaalinen hierarkia: havaintoryhmien otsikot käyttävät nyt samaa
+        divider-tyyliä kuin etusivun pääjaot ("Trimmisuositus" ym.), jotta ne erottuvat
+        selvästi diagnoosikortin sisäisistä kenttäotsikoista (jotka pysyvät pienempinä).
+        Lisätty oma (ei NFIA-piirustukseen perustuva) kaavakuva fokan termeistä alkuun.
+*/
+const VERSION = 'v1.1';
+const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
+const state = { windSpeed: null };
+const els = {
+  wsVal: document.getElementById('wsVal'),
+  bandTag: document.getElementById('bandTag'),
+  obsTimeWind: document.getElementById('obsTimeWind'),
+  manualWindRow: document.getElementById('manualWindRow'),
+  manualWindInput: document.getElementById('manualWindInput'),
+};
+
+function getBand(ws){
+  if(ws == null) return null;
+  if(ws < 4) return 'light';
+  if(ws < 8) return 'medium';
+  if(ws < 12) return 'strong';
+  return 'extreme';
+}
+const bandLabel = {
+  light:'kevyt tuuli · 0–4 m/s', medium:'keskituuli · 4–8 m/s',
+  strong:'kova tuuli · 8–12 m/s', extreme:'erittäin kova tuuli · yli 12 m/s'
+};
+
+async function fetchXml(url){
+  try{
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.text();
+  } catch(directErr){
+    const proxied = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const res2 = await fetch(proxied);
+    if(!res2.ok) throw new Error('proxy HTTP ' + res2.status);
+    return await res2.text();
+  }
+}
+
+async function fetchWind(){
+  try{
+    const text = await fetchXml(WIND_URL);
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    const elements = xml.getElementsByTagName('BsWfs:BsWfsElement');
+    if(!elements.length) throw new Error('Ei tuulihavaintoja');
+    const latest = {};
+    for(const el of elements){
+      const nameEl = el.getElementsByTagName('BsWfs:ParameterName')[0];
+      const valEl = el.getElementsByTagName('BsWfs:ParameterValue')[0];
+      const timeEl = el.getElementsByTagName('BsWfs:Time')[0];
+      if(!nameEl || !valEl) continue;
+      const name = nameEl.textContent.trim().toLowerCase();
+      const value = parseFloat(valEl.textContent.trim());
+      const time = timeEl ? timeEl.textContent.trim() : null;
+      if(isNaN(value)) continue;
+      if(!latest[name] || (time && time > latest[name].time)) latest[name] = {time, value};
+    }
+    const pick = (names) => { for(const n of names){ if(latest[n]) return latest[n]; } return null; };
+    const wsHit = pick(['windspeedms','ws_10min','ws','windspeed']);
+    if(!wsHit) throw new Error('tuulinopeutta ei löytynyt');
+    state.windSpeed = wsHit.value;
+    els.wsVal.textContent = wsHit.value.toFixed(1);
+    els.bandTag.textContent = bandLabel[getBand(wsHit.value)];
+    els.obsTimeWind.textContent = wsHit.time ? ('havaittu ' + new Date(wsHit.time).toLocaleString('fi-FI',{hour:'2-digit',minute:'2-digit'})) : '';
+  } catch(err){
+    els.bandTag.textContent = 'tuulta ei saatu — syötä itse';
+    els.manualWindRow.classList.add('show');
+  }
+  renderActiveDiagnosis();
+}
+
+document.getElementById('manualToggle').addEventListener('click', () => {
+  els.manualWindRow.classList.toggle('show');
+});
+document.getElementById('manualWindApply').addEventListener('click', () => {
+  const val = parseFloat(els.manualWindInput.value);
+  if(!isNaN(val) && val >= 0){
+    state.windSpeed = val;
+    els.wsVal.textContent = val.toFixed(1);
+    els.bandTag.textContent = bandLabel[getBand(val)];
+    els.obsTimeWind.textContent = 'käsin syötetty';
+    renderActiveDiagnosis();
+  }
+});
+
+// ---------- Diagnostiikkatietokanta ----------
 const categories = [
   {
     label: 'Purjeen syvyys ja pussin sijainti',
@@ -135,11 +323,12 @@ const categories = [
         id: 'syvin_edessa_syva',
         havainto: 'Syvin kohta on liian edessä, ja koko fokka on selvästi syvä/pussikas',
         ensisijainen: 'Forestay sag on liian suuri — vantit ovat liian löysällä nykyiseen tuuleen nähden.',
-        vaihtoehto: 'Falli on liian kireällä. Tämä on harvinaisempi selitys, jos koko purje on syvä eikä vain etuosa.',
+        vaihtoehto: 'Falli on liian kireällä. Harvinaisempi selitys, jos koko purje on syvä eikä vain etuosa.',
         erotteleva: 'Tarkista fokan kokonaissyvyys, ei vain etuosaa. Jos koko purje on selvästi syvä, epäile ensin sagia. Jos vain etuosa on syvä muun purjeen ollessa normaali, epäile fallia.',
-        korjaus: 'Kiristä sivuvantteja hieman — tämä pienentää keulaharuksen taipumaa. Tarkista taipuma uudelleen kryssillä (tavoite tuulesta riippuen 4–8 cm, ks. etusivun Maston lähtöasento).',
+        korjaus: 'Kiristä sivuvantteja hieman — tämä pienentää keulaharuksen taipumaa. Tarkista taipuma uudelleen kryssillä.',
         luokka: 'perusteltu',
-        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Morin et al. 2026 (FSI-tutkimus keulaharuksesta)']
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Morin et al. 2026 (FSI-tutkimus keulaharuksesta)'],
+        sagRelevant: true
       },
       {
         id: 'syvin_edessa_ei_syva',
@@ -149,7 +338,8 @@ const categories = [
         erotteleva: 'Katso etuliikkiä: jos rypyt ovat kokonaan poissa vaikka tuuli ei sitä vaatisi, kyse on todennäköisesti fallista. Tarkista myös kokonaissyvyys.',
         korjaus: 'Löysää fallia hieman, kunnes etuliikkiin jää pieniä ryppyjä (kevyt/keski tuuli) tai rypyt juuri katoavat (kova tuuli). Älä kiristä fallia enempää kuin ryppyjen poistoon.',
         luokka: 'vahva',
-        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Béguin & Breitsamter 2014']
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker', 'Béguin & Breitsamter 2014'],
+        falliRelevant: true
       },
       {
         id: 'taytelainen_etuosa',
@@ -159,7 +349,8 @@ const categories = [
         erotteleva: 'Tarkista erikseen kokonaissyvyys, syvimmän kohdan sijainti ja etuliikin rypyt. Korjaa ensin se säätö, jonka erotteleva havainto osuu selkeimmin kohdalleen.',
         korjaus: 'Käy läpi järjestyksessä: 1) sag (vantit), 2) falli. Älä säädä molempia yhtä aikaa — muuten et opi kumpi oli syy.',
         luokka: 'perusteltu',
-        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker']
+        lahteet: ['North Sails', 'HSK-trimmiklinikka', 'Heikkilä Sailmaker'],
+        sagRelevant: true
       }
     ]
   },
@@ -168,21 +359,21 @@ const categories = [
     items: [
       {
         id: 'etu_alin_ensin',
-        havainto: 'Alin telltale-pari (lähellä kantta) reagoi ensin, kun nouset hitaasti tuuleen',
+        havainto: 'ETU-1 (alin pari) reagoi ensin, kun nouset hitaasti tuuleen',
         ensisijainen: 'Skuuttipiste on todennäköisesti liian edessä.',
         vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
         erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
-        korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, reagoiko ylin vai alin pari ensin seuraavalla nostolla.',
+        korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
         lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
       },
       {
         id: 'etu_ylin_ensin',
-        havainto: 'Ylin telltale-pari reagoi ensin, kun nouset hitaasti tuuleen',
+        havainto: 'ETU-4 (ylin pari) reagoi ensin, kun nouset hitaasti tuuleen',
         ensisijainen: 'Skuuttipiste on todennäköisesti liian takana.',
         vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
         erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
-        korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, reagoiko ylin vai alin pari ensin seuraavalla nostolla.',
+        korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
         lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
       }
@@ -193,11 +384,11 @@ const categories = [
     items: [
       {
         id: 'keskilatta_sisaanpain',
-        havainto: 'Keskimmäinen latta on selvästi sisäänpäin keskilinjasta',
+        havainto: 'Keskilatta on selvästi sisäänpäin keskilinjasta',
         ensisijainen: 'Skuutti on liian kireällä.',
         vaihtoehto: 'Forestay sag on muuttunut (esim. vantit kiristyneet purjehduksen aikana) ja siirtänyt koko purjeen muotoa.',
         erotteleva: 'Tarkista fokan muu muoto ja etuliikin rypyt. Jos vain keskilatta on poikkeava muun purjeen ollessa normaali, kyse on skuutista.',
-        korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskilatan suunta uudelleen. Muista: suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
+        korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskilatan suunta uudelleen. Suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
         luokka: 'vahva',
         lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014']
       }
@@ -205,10 +396,30 @@ const categories = [
   }
 ];
 
-// ---------- Renderöinti ----------
+// Tuulikohtainen sag/falli-konteksti diagnoosikorttiin
+const bandSagTarget = {
+  light:  'North Sails / HSK: ~8 cm. Heikkilä: 4–6 cm.',
+  medium: 'North Sails: pienenee ~1½ kierrosta kevyestä. Heikkilä: pysyy ~4–6 cm:ssä.',
+  strong: 'North Sails: pienenee vielä ~1½ kierrosta. Heikkilä: pysyy ~4–6 cm:ssä.',
+  extreme:'Sama kuin kovassa tuulessa — sag pidetään pienimmillään.'
+};
 
+function windNoteFor(item){
+  const band = getBand(state.windSpeed);
+  if(!band) return '';
+  if(item.sagRelevant){
+    return '<div class="wind-note"><b>Tämänhetkinen tuuli: ' + bandLabel[band] + '.</b> Sag-tavoite tässä tuulessa: ' + bandSagTarget[band] + ' Jos vantit ovat selvästi tätä löysemmällä, se tukee sag-diagnoosia.</div>';
+  }
+  if(item.falliRelevant){
+    return '<div class="wind-note"><b>Tämänhetkinen tuuli: ' + bandLabel[band] + '.</b> Falli kiristetään aina vain ryppyjen poistoon asti riippumatta tuulen voimakkuudesta — periaate ei muutu tuulen mukana, vain se kuinka vähän ryppyä jää sallittavaksi.</div>';
+  }
+  return '';
+}
+
+// ---------- Renderöinti ----------
 const symptomWrap = document.getElementById('symptomWrap');
 const diagWrap = document.getElementById('diagWrap');
+let activeId = null;
 
 function luokkaLabel(l){
   return {vahva:'Vahva näyttö', perusteltu:'Perusteltu diagnoosi', hypoteesi:'Avoin hypoteesi'}[l] || l;
@@ -227,22 +438,20 @@ function renderSymptoms(){
     btn.addEventListener('click', () => {
       symptomWrap.querySelectorAll('.symptom-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      showDiagnosis(btn.dataset.id);
+      activeId = btn.dataset.id;
+      renderActiveDiagnosis();
     });
   });
 }
 
 function findItem(id){
-  for(const cat of categories){
-    for(const item of cat.items){
-      if(item.id === id) return item;
-    }
-  }
+  for(const cat of categories){ for(const item of cat.items){ if(item.id === id) return item; } }
   return null;
 }
 
-function showDiagnosis(id){
-  const item = findItem(id);
+function renderActiveDiagnosis(){
+  if(!activeId) return;
+  const item = findItem(activeId);
   if(!item) return;
   let html = '<div class="diag-card">';
   html += '<span class="badge ' + item.luokka + '">' + luokkaLabel(item.luokka) + '</span>';
@@ -252,14 +461,15 @@ function showDiagnosis(id){
   }
   html += '<div class="diag-row"><div class="diag-k">Miten erotat nämä toisistaan</div><div class="diag-v">' + item.erotteleva + '</div></div>';
   html += '<div class="diag-row"><div class="diag-k">Pienin suositeltu korjaus</div><div class="diag-v">' + item.korjaus + '</div></div>';
+  html += windNoteFor(item);
   html += '<div class="src">' + item.lahteet.join(', ') + '</div>';
   html += '</div>';
   diagWrap.innerHTML = html;
-  diagWrap.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
-document.getElementById('versionTag').textContent = 'v1.0';
+document.getElementById('versionTag').textContent = VERSION;
 renderSymptoms();
+fetchWind();
 </script>
 </body>
 </html>
