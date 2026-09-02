@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fokan trimmidiagnostiikka — Folkkarin trimmi</title>
+<title>Fokan trimmaaminen — Folkkarin trimmi</title>
 <style>
   :root{
     --ink:#0f2438;
@@ -63,6 +63,7 @@
   /* Havaintonapit */
   .cat-label{font-family:"Helvetica Neue", Arial, sans-serif;font-size:13px;font-weight:600;color:var(--ink);margin:18px 0 8px;}
   .cat-label:first-child{margin-top:0;}
+  .cat-note{font-size:13.5px;color:#465a68;margin:0 0 12px;line-height:1.4;}
   .symptom-btn{
     display:block;width:100%;text-align:left;
     font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:14.5px;line-height:1.35;
@@ -125,8 +126,8 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.7</span> · oire → syy → korjaus</p>
-    <h1>Mikä fokassa on vialla?</h1>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.9</span> · oire → syy → korjaus</p>
+    <h1>Fokan trimmaaminen</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
     todennäköisimmän syyn, sen tärkeimmän vaihtoehdon ja miten erotat ne toisistaan.</p>
@@ -175,7 +176,7 @@
       <text x="103" y="347" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Takaliikki</text>
       <text x="181" y="410" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Alaliikki (jalka)</text>
       <!-- kulmat -->
-      <text x="140" y="34" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Pää</text>
+      <text x="140" y="34" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Fallikulma</text>
       <text x="273" y="404" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Halssikulma</text>
       <text x="90" y="370" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Skuuttikulma</text>
       <!-- skuutti ja skuuttipiste -->
@@ -197,7 +198,7 @@
       <dt>Etuliikki</dt><dd>Purjeen etureuna (luff).</dd>
       <dt>Takaliikki</dt><dd>Purjeen takareuna (leech).</dd>
       <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot).</dd>
-      <dt>Pää</dt><dd>Purjeen yläkulma, johon falli kiinnittyy.</dd>
+      <dt>Fallikulma</dt><dd>Purjeen yläkulma, johon falli kiinnittyy.</dd>
       <dt>Halssikulma</dt><dd>Etukulma, kiinnittyy keulaan.</dd>
       <dt>Skuuttikulma</dt><dd>Takakulma, johon skuutti kiinnittyy.</dd>
       <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös.</dd>
@@ -275,8 +276,18 @@
         vain keskikohdan merkki. (3) Diagnoosi avautuu nyt haitarityylisesti suoraan
         valitun havaintonapin alle (aiemmin renderöityi kiinteään paikkaan sivun alalaitaan,
         jota ei huomannut). Napin klikkaaminen uudelleen sulkee haitarin.
+  v1.8  Korjattu otsikko harhaanjohtavasta kysymysmuodosta ("Mikä fokassa on vialla?")
+        selkeäksi kuvaukseksi ("Fokan trimmaaminen"), koska sivu sisältää muutakin kuin
+        oirediagnostiikkaa (referenssikaavio, sanasto).
+  v1.9  Kaksi korjausta: (1) Lisätty "Purjeen syvyys ja pussin sijainti" -kategorian alkuun
+        selittävä huomautus siitä, miten "syvin kohta liian edessä" tunnistetaan käytännössä
+        — aiemmin tämä oli lukijalle mittaamaton käsite. Kriteeri: perustaso haetaan
+        keskituulessa (Heikkilä Sailmaker), ja "liian edessä" tarkoittaa selvää poikkeamaa
+        siitä. (2) Korjattu referenssikaavion "Pää"-nimitys "Fallikulmaksi", johdonmukaisesti
+        Halssikulma/Skuuttikulma-nimeämisen kanssa (kulmat on nimetty niihin kiinnittyvän
+        köyden mukaan).
 */
-const VERSION = 'v1.7';
+const VERSION = 'v1.9';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
@@ -363,6 +374,7 @@ document.getElementById('manualWindApply').addEventListener('click', () => {
 const categories = [
   {
     label: 'Purjeen syvyys ja pussin sijainti',
+    note: 'Syvin kohta = poikkileikkauksen pussin syvin kohta etuliikin ja takaliikin välillä. Perustaso haetaan keskituulessa (4–6 m/s, ks. Heikkilä Sailmaker) — silloin syvin kohta asettuu normaaliksi katsottuun paikkaan. "Liian edessä" tarkoittaa, että pussi on selvästi lähempänä etuliikkiä kuin tässä perustrimmissä: kangas näyttää pyöreältä heti etuliikin vieressä ja litistyy nopeasti sen jälkeen, sen sijaan että kaarevuus jakautuisi tasaisesti kohti takaliikkiä.',
     items: [
       {
         id: 'syvin_edessa_syva',
@@ -473,6 +485,9 @@ function renderSymptoms(){
   let html = '';
   categories.forEach(cat => {
     html += '<div class="cat-label">' + cat.label + '</div>';
+    if(cat.note){
+      html += '<p class="cat-note">' + cat.note + '</p>';
+    }
     cat.items.forEach(item => {
       html += '<button class="symptom-btn" data-id="' + item.id + '">' + item.havainto + '</button>';
       html += '<div class="diag-slot" id="slot-' + item.id + '"></div>';
