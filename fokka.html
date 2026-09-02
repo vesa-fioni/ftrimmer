@@ -126,7 +126,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.9</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.1</span> · oire → syy → korjaus</p>
     <h1>Fokan trimmaaminen</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -164,6 +164,7 @@
       <!-- etuliikin havaintopisteet ETU1-4: sijoitettu ~15% purjeen leveyssuunnassa luffilta
            sisäänpäin (todellinen virtauslangan kiinnityskohta, ei itse saumassa) -->
       <circle cx="222.8" cy="324" r="3" fill="#1c5d78"/><line x1="222.8" y1="324" x2="245" y2="324" stroke="#1c5d78" stroke-width="0.75"/><text x="251" y="328" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
+      <text x="251" y="340" font-family="Helvetica Neue, Arial" font-size="8" fill="#8a99a3">(T=tuuli, S=suoja)</text>
       <circle cx="204.6" cy="248" r="3" fill="#1c5d78"/><line x1="204.6" y1="248" x2="222" y2="248" stroke="#1c5d78" stroke-width="0.75"/><text x="228" y="252" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-2</text>
       <circle cx="186.4" cy="172" r="3" fill="#1c5d78"/><line x1="186.4" y1="172" x2="199" y2="172" stroke="#1c5d78" stroke-width="0.75"/><text x="204" y="176" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-3</text>
       <circle cx="168.2" cy="96"  r="3" fill="#1c5d78"/><line x1="168.2" y1="96"  x2="176" y2="96"  stroke="#1c5d78" stroke-width="0.75"/><text x="181" y="100" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-4</text>
@@ -201,7 +202,7 @@
       <dt>Fallikulma</dt><dd>Purjeen yläkulma, johon falli kiinnittyy.</dd>
       <dt>Halssikulma</dt><dd>Etukulma, kiinnittyy keulaan.</dd>
       <dt>Skuuttikulma</dt><dd>Takakulma, johon skuutti kiinnittyy.</dd>
-      <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös.</dd>
+      <dt>ETU-1…4</dt><dd>Etuliikin havaintokorkeudet alhaalta ylös. Kussakin kaksi lankaa: tuulen ja suojan puoli (määräytyy halssista).</dd>
       <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
       <dt>Keskiviiva</dt><dd>Fokan keskikohdan merkki, ei läpi menevä latta.</dd>
       <dt>Skuuttipiste</dt><dd>Kohta kannella, johon skuutin kääntöplokki on kiinnitetty.</dd>
@@ -286,8 +287,24 @@
         siitä. (2) Korjattu referenssikaavion "Pää"-nimitys "Fallikulmaksi", johdonmukaisesti
         Halssikulma/Skuuttikulma-nimeämisen kanssa (kulmat on nimetty niihin kiinnittyvän
         köyden mukaan).
+  v2.0  Selvennetty tuuli/suoja-nimeämisen halssiriippuvuutta: sama fyysinen lanka on eri
+        puolella riippuen halssista, joten nimeäminen on funktionaalinen (mikä lanka on
+        JUURI NYT tuulen puolella), ei kankaan kiinteään sivuun sidottu. Lisätty huomautus
+        "Etuliikin virtauslankojen käytös" -kategorian alkuun, päivitetty sanaston
+        ETU-1…4-selitys, ja lisätty kaavioon pieni (T=tuuli, S=suoja) -esimerkkimerkintä
+        ETU-1:n yhteyteen havainnollistamaan että jokaisessa korkeudessa on kaksi lankaa.
+  v2.1  Lisätty kaksi uutta diagnoosia TAKA-2:lle (aiemmin määritelty vain kaaviossa, ei
+        käytössä yhdessäkään diagnoosissa): "kiertyy suojan puolelle" (skuutti liian kireä /
+        skuuttipiste liian takana) ja "lepattaa" (skuutti liian löysä / skuuttipiste liian
+        edessä). Lähde: Heikkilä Sailmaker ("takaliikin kiertymää osoittava ylin liehu
+        lentää taaksepäin" oikean trimmin merkkinä). Näyttöluokka "perusteltu diagnoosi",
+        koska vain yksi Folkboat-kohtainen lähde vahvistaa suoraan tämän havainnon, vaikka
+        yleismekanismi (leech-telltale kiertyy/lepattaa) on laajalti tunnettu purjehdustieto.
+        Yhdistetty entinen "Keskiviivan suunta" -kategoria ja TAKA-diagnoosit samaksi
+        kategoriaksi "Keskiviivan ja takaliikin käytös", koska molemmat koskevat samaa
+        säätöakselia (skuutti/skuuttipiste) ja toimivat toistensa ristiintarkistuksena.
 */
-const VERSION = 'v1.9';
+const VERSION = 'v2.1';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
@@ -413,6 +430,7 @@ const categories = [
   },
   {
     label: 'Etuliikin virtauslankojen käytös hitaassa nostossa',
+    note: 'Jokaisessa ETU-korkeudessa on kaksi lankaa: tuulen puolen ja suojan puolen lanka. Tuuli/suoja määräytyy aina senhetkisen halssin mukaan, ei kankaan kiinteästä puolesta — halssin vaihtuessa sama fyysinen lanka vaihtaa nimeä. "Pari reagoi" tarkoittaa, että kummankin puolen lanka samalla korkeudella alkaa käyttäytyä poikkeavasti, riippumatta siitä kummalla halssilla purjehdit.',
     items: [
       {
         id: 'etu_alin_ensin',
@@ -437,7 +455,8 @@ const categories = [
     ]
   },
   {
-    label: 'Keskiviivan suunta',
+    label: 'Keskiviivan ja takaliikin käytös',
+    note: 'Molemmat havainnot koskevat samaa säätöakselia (skuutti/skuuttipiste) mutta eri puolelta purjetta — käytä niitä toistensa vahvistuksena. Heikkilä Sailmaker: oikea trimmi näkyy siitä, että takaliikin kiertymää osoittava ylin liehu (TAKA-2) lentää suoraan taaksepäin.',
     items: [
       {
         id: 'keskiviiva_sisaanpain',
@@ -448,6 +467,26 @@ const categories = [
         korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskiviivan suunta uudelleen. Suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
         luokka: 'vahva',
         lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014']
+      },
+      {
+        id: 'taka2_suojaan',
+        havainto: 'Takaliikin ylin lanka (TAKA-2) kiertyy suojan puolelle sen sijaan että lentäisi suoraan taakse',
+        ensisijainen: 'Skuutti on liian kireällä.',
+        vaihtoehto: 'Skuuttipiste on liian takana, mikä sulkee takaliikkiä ylhäältä liikaa vaikka skuutti itsessään olisi sopiva.',
+        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos sekin on sisäänpäin, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 kiertyy, epäile ensin skuuttipisteen paikkaa.',
+        korjaus: 'Löysää skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli eteenpäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen: sen tulisi lentää suoraan taaksepäin.',
+        luokka: 'perusteltu',
+        lahteet: ['Heikkilä Sailmaker']
+      },
+      {
+        id: 'taka2_lepattaa',
+        havainto: 'Takaliikin ylin lanka (TAKA-2) lepattaa tai roikkuu, ei pysy suorana',
+        ensisijainen: 'Skuutti on liian löysällä — takaliikki on liian avoin (liikaa kiertoa/twistiä).',
+        vaihtoehto: 'Skuuttipiste on liian edessä, mikä avaa takaliikkiä ylhäältä liikaa vaikka skuutti itsessään olisi sopiva.',
+        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos se on selvästi normaalia löysempi, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 lepattaa, epäile ensin skuuttipisteen paikkaa.',
+        korjaus: 'Kiristä skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli taaksepäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen.',
+        luokka: 'perusteltu',
+        lahteet: ['Heikkilä Sailmaker']
       }
     ]
   }
