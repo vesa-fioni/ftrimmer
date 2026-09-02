@@ -126,7 +126,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.1</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.2</span> · oire → syy → korjaus</p>
     <h1>Fokan trimmaaminen</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -303,8 +303,16 @@
         Yhdistetty entinen "Keskiviivan suunta" -kategoria ja TAKA-diagnoosit samaksi
         kategoriaksi "Keskiviivan ja takaliikin käytös", koska molemmat koskevat samaa
         säätöakselia (skuutti/skuuttipiste) ja toimivat toistensa ristiintarkistuksena.
+  v2.2  Lisätty tuulikonteksti skuuttipiste- ja skuuttijännitys-diagnooseihin (aiemmin vain
+        sag/falli-diagnooseissa oli tuulen mukaan mukautuva huomautus). ETU-diagnoosit
+        (skuuttipisteen paikka) näyttävät nyt North Sailsin/Heikkilän tuulikohtaisen
+        odotetun skuuttipisteen sijainnin, jotta lukija näkee onko nykyinen paikka jo
+        tuulen mukaan oikea ennen kuin tulkitsee ETU-havainnon virheeksi. Keskiviiva/TAKA-2
+        -diagnoosit näyttävät North Sailsin kuvauksen odotetusta virtauslankakäytöksestä
+        kussakin tuuliluokassa, jotta tuulen mukaan normaali kierto (twist) ei sekoitu
+        todelliseen skuuttijännitysvirheeseen.
 */
-const VERSION = 'v2.1';
+const VERSION = 'v2.2';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
@@ -440,7 +448,8 @@ const categories = [
         erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
-        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta'],
+        leadRelevant: true
       },
       {
         id: 'etu_ylin_ensin',
@@ -450,7 +459,8 @@ const categories = [
         erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
-        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta'],
+        leadRelevant: true
       }
     ]
   },
@@ -466,7 +476,8 @@ const categories = [
         erotteleva: 'Tarkista fokan muu muoto ja etuliikin rypyt. Jos vain keskiviiva on poikkeava muun purjeen ollessa normaali, kyse on skuutista.',
         korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskiviivan suunta uudelleen. Suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
         luokka: 'vahva',
-        lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014']
+        lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014'],
+        sheetRelevant: true
       },
       {
         id: 'taka2_suojaan',
@@ -476,7 +487,8 @@ const categories = [
         erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos sekin on sisäänpäin, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 kiertyy, epäile ensin skuuttipisteen paikkaa.',
         korjaus: 'Löysää skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli eteenpäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen: sen tulisi lentää suoraan taaksepäin.',
         luokka: 'perusteltu',
-        lahteet: ['Heikkilä Sailmaker']
+        lahteet: ['Heikkilä Sailmaker'],
+        sheetRelevant: true
       },
       {
         id: 'taka2_lepattaa',
@@ -486,7 +498,8 @@ const categories = [
         erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos se on selvästi normaalia löysempi, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 lepattaa, epäile ensin skuuttipisteen paikkaa.',
         korjaus: 'Kiristä skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli taaksepäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen.',
         luokka: 'perusteltu',
-        lahteet: ['Heikkilä Sailmaker']
+        lahteet: ['Heikkilä Sailmaker'],
+        sheetRelevant: true
       }
     ]
   }
@@ -500,6 +513,25 @@ const bandSagTarget = {
   extreme:'Sama kuin kovassa tuulessa — sag pidetään pienimmillään.'
 };
 
+// Skuuttipisteen odotettu paikka tuulen mukaan (North Sails / Heikkilä) — auttaa arvioimaan
+// onko nykyinen skuuttipiste jo oikeassa, tuulen mukaan odotetussa paikassa, ennen kuin
+// sitä siirretään ETU-diagnoosin perusteella.
+const bandLeadTarget = {
+  light:  'North Sails: skuutti hieman löysemmällä, ylälieve saa liehua 2–3°. Heikkilä: harkitse skuuttipistettä yksi reikä eteenpäin ja skuutti muutama sentti löysemmälle.',
+  medium: 'North Sails: skuuttipiste perusasennossa — tämä on lähtökohta, josta poikkeamia arvioidaan.',
+  strong: 'North Sails: skuuttipistettä 1–2 reikäväliä taaemmas, yläosa päästää tuulta läpi. Heikkilä: yksi reikäväli taaemmas, tarvittaessa enemmän.',
+  extreme:'North Sails / Heikkilä: skuuttipiste kauimpana takana.'
+};
+
+// Odotettu virtauslankojen/keskiviivan käytös tuulen mukaan (North Sails) — auttaa
+// erottamaan tuulen mukaan normaalin kierron (twist) todellisesta skuuttijännitysvirheestä.
+const bandSheetNote = {
+  light:  'Kevyessä tuulessa yläosan sallitaan liehua 2–3° (North Sails) — pieni poikkeama keskiviivassa tai TAKA-2:ssa voi olla tarkoituksellista, ei virhe.',
+  medium: 'Keskituulessa suojan puolen lanka pysyy kiinni ja tuulen puolen lanka hieman höllänä (North Sails) — keskiviivan ja TAKA-2:n tulisi olla lähellä normaalia tässä tuulessa.',
+  strong: 'Kovassa tuulessa yläosan sallitaan päästää tuulta läpi (North Sails) — TAKA-2 saa lepattaa hieman enemmän kuin keskituulessa ilman että kyse on virheestä.',
+  extreme:'Erittäin kovassa tuulessa sama periaate korostuu — pieni lepatus yläosassa on odotettua.'
+};
+
 function windNoteFor(item){
   const band = getBand(state.windSpeed);
   if(!band) return '';
@@ -508,6 +540,12 @@ function windNoteFor(item){
   }
   if(item.falliRelevant){
     return '<div class="wind-note"><b>Tämänhetkinen tuuli: ' + bandLabel[band] + '.</b> Falli kiristetään aina vain ryppyjen poistoon asti riippumatta tuulen voimakkuudesta — periaate ei muutu tuulen mukana, vain se kuinka vähän ryppyä jää sallittavaksi.</div>';
+  }
+  if(item.leadRelevant){
+    return '<div class="wind-note"><b>Tämänhetkinen tuuli: ' + bandLabel[band] + '.</b> Skuuttipisteen odotettu paikka tässä tuulessa: ' + bandLeadTarget[band] + ' Tarkista ensin, onko nykyinen paikka jo tätä vastaava, ennen kuin tulkitset ETU-havainnon virheeksi.</div>';
+  }
+  if(item.sheetRelevant){
+    return '<div class="wind-note"><b>Tämänhetkinen tuuli: ' + bandLabel[band] + '.</b> ' + bandSheetNote[band] + '</div>';
   }
   return '';
 }
