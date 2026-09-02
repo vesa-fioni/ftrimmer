@@ -123,7 +123,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.5</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.6</span> · oire → syy → korjaus</p>
     <h1>Mikä fokassa on vialla?</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -190,26 +190,18 @@
         </marker>
       </defs>
     </svg>
-    <p class="ref-caption">Kaavakuvan geometria ja kulmat on laskettu suoraan käyttäjän itse
-    jäljittämästä ääriviivasta luokan Sail-Spars-Rigging-piirustuksella (ei silmämääräisestä
-    arviosta eikä oletetusta suorasta kulmasta): luff ~6,0 m kallistuu ~17° pystystä, takaliikki
-    ~5,6 m kallistuu ~8°, jalka ~2,6 m. Tarkistettu luokkasääntöjä (CR 9.32) vasten: laskettu
-    keskimitta ~5,66 m osuu 97,5 %:iin 5800 mm:n sääntörajasta. Ei silti pikselintarkka
-    jäljennös — pohjautuu käsin merkittyihin kulmapisteisiin. Huom: vanhoissa virallisissa
-    piirustuksissa skuutti on kaksiköytinen per puoli — nykykäytännössä käytetään yhtä köyttä,
-    kuten tässäkin.</p>
     <dl class="ref-legend">
-      <dt>Etuliikki</dt><dd>Purjeen etureuna (luff, ~6,0 m), kulkee keulastaagia pitkin, kallistuu ~17° pystystä.</dd>
-      <dt>Takaliikki</dt><dd>Purjeen takareuna (leech, ~5,6 m), kallistuu ~8° pystystä toiseen suuntaan.</dd>
-      <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot, ~2,6 m). Halssikulma–skuuttikulma-välinen sivu.</dd>
-      <dt>Pää</dt><dd>Head — purjeen yläkulma, johon falli kiinnittyy.</dd>
-      <dt>Halssikulma</dt><dd>Tack — etukulma, kiinnittyy keulaan/halssin kiinnityspisteeseen.</dd>
-      <dt>Skuuttikulma</dt><dd>Clew — takakulma, johon skuutti kiinnittyy.</dd>
-      <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös. Käytetään telltale-diagnostiikassa.</dd>
+      <dt>Etuliikki</dt><dd>Purjeen etureuna (luff).</dd>
+      <dt>Takaliikki</dt><dd>Purjeen takareuna (leech).</dd>
+      <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot).</dd>
+      <dt>Pää</dt><dd>Purjeen yläkulma, johon falli kiinnittyy.</dd>
+      <dt>Halssikulma</dt><dd>Etukulma, kiinnittyy keulaan.</dd>
+      <dt>Skuuttikulma</dt><dd>Takakulma, johon skuutti kiinnittyy.</dd>
+      <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös.</dd>
       <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
-      <dt>Keskilatta</dt><dd>Fokan keskimmäinen latta — sen suunta on skuuttijännityksen tärkein havainto.</dd>
-      <dt>Skuuttipiste</dt><dd>Kohta kannella/ruffilla, johon skuutin kääntöplokki on kiinnitetty.</dd>
-      <dt>Fokan falli</dt><dd>Nostoköysi (halyard) — säätää fallin kireyttä.</dd>
+      <dt>Keskilatta</dt><dd>Fokan keskimmäinen latta.</dd>
+      <dt>Skuuttipiste</dt><dd>Kohta kannella, johon skuutin kääntöplokki on kiinnitetty.</dd>
+      <dt>Fokan falli</dt><dd>Nostoköysi (halyard).</dd>
     </dl>
   </div>
 
@@ -274,8 +266,10 @@
         ei mielivaltaiseen pystysuuntaan. (2) ETU-1…4-merkit siirretty ~15% purjeen
         leveydestä luffilta sisäänpäin todellista virtauslangan kiinnityskohtaa vastaavasti
         (ei enää itse saumaan/luffiin), ohuilla liitinviivoilla omiin labeleihinsa.
+  v1.6  Poistettu kaavakuvan alta pitkä tekninen kuvateksti (mittojen laskentaperustelut) ja
+        tiivistetty sanaston selitykset ytimekkäämmiksi — pelkkä lyhyt selitys per termi.
 */
-const VERSION = 'v1.5';
+const VERSION = 'v1.6';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
