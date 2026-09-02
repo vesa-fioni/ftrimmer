@@ -126,7 +126,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.3</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.5</span> · oire → syy → korjaus</p>
     <h1>Fokan trimmaaminen</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -218,7 +218,7 @@
       <dt>Halssikulma</dt><dd>Etukulma, kiinnittyy keulaan.</dd>
       <dt>Skuuttikulma</dt><dd>Takakulma, johon skuutti kiinnittyy.</dd>
       <dt>ETU-1…4</dt><dd>Etuliikin havaintokorkeudet alhaalta ylös. Kussakin kaksi lankaa: tuulen ja suojan puoli (määräytyy halssista).</dd>
-      <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
+      <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat. TAKA-2 (ylempi) on ensisijainen diagnostinen merkki; TAKA-1 (alempi) toimii vertailukohtana sille.</dd>
       <dt>Keskiviiva</dt><dd>Fokan keskikohdan merkki, ei läpi menevä latta.</dd>
       <dt>Skuuttipiste</dt><dd>Kohta kannella, johon skuutin kääntöplokki on kiinnitetty.</dd>
       <dt>Fokan falli</dt><dd>Nostoköysi (halyard).</dd>
@@ -228,6 +228,24 @@
   <div class="divider">Valitse havainto</div>
 
   <div id="symptomWrap"></div>
+
+  <div class="divider">Otanko fokasta kaiken irti?</div>
+  <div class="ref-wrap">
+    <p class="cat-note" style="margin-bottom:14px;">Tämä ei ole oirediagnostiikkaa vaan kolme tapaa arvioida onko trimmi jo lähellä parasta mahdollista — käytä niitä yhdessä, ei yksittäin.</p>
+    <div class="diag-row">
+      <div class="diag-k">Vertailu on luotettavin testi</div>
+      <div class="diag-v">Paras tapa arvioida trimmiä on sparrata toisen veneen kanssa pitkillä halsseilla samassa tuulessa ja aallokossa, ja verrata vauhtia ja nousua toisiinne. Jos sparrauskumppania ei ole, vertaa omaan historiaan samoissa olosuhteissa — yksin purjehtiessa et voi tietää onko nykyinen vauhti hyvä ilman jotain verrokkia.</div>
+    </div>
+    <div class="diag-row">
+      <div class="diag-k">Nopeus- ja nousukulmatavoite keskituulessa</div>
+      <div class="diag-v">Heikkilä Sailmakerin ohjeen mukaan hyvin trimmatulla veneellä pitäisi keskituulen kryssillä (4–6 m/s) olla vauhtia lähemmäs viisi solmua tai hiukan ylikin, nousukulman ollessa noin 45°. Kokeneen kilpapurjehtijan vinkkinä (suullinen tieto, ei kirjallinen lähde) tarkempi tavoiteluku samassa tuulessa on 5,1 solmua — tämä on maailmanmestaritason referenssi tässä luokassa.</div>
+    </div>
+    <div class="diag-row">
+      <div class="diag-k">Suurin kuormitus ei ole sama kuin paras vauhti</div>
+      <div class="diag-v">Kun trimmi tuntuu parhaalta, löysää skuuttia tarkoituksella 1–2 cm. Jos peräsimen paine kevenee samalla kun vauhti pysyy tai paranee, olit yli-trimmattu — täysimittainen koe (Viola &amp; Flay 2010) osoitti, että hieman löysemmälle trimmatulla fokalla saa usein suuremman ajavan voiman ja pienemmän sivuvoiman kuin maksiminostoon trimmatulla.</div>
+    </div>
+    <div class="src">HSK-trimmiklinikka, Heikkilä Sailmaker, kokeneen kilpapurjehtijan vinkki (suullinen tieto), Viola &amp; Flay 2010, Biancolini et al. 2014</div>
+  </div>
 
   <details class="collapsible">
     <summary>Mitä näyttöluokat tarkoittavat</summary>
@@ -239,9 +257,11 @@
   <footer>
     Diagnostiikka yhdistää North Sailsin, Heikkilä Sailmakerin ja HSK-trimmiklinikan
     (Kæstel &amp; Lindberg) fokkaohjeet vertaisarvioituun purjeaerodynamiikan tutkimukseen
-    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026). Tuuli- ja
-    aallokkohavainnot: Ilmatieteen laitos, avoin data (CC BY 4.0), asemat Harmaja ja
-    Suomenlinna. Tämä on ajattelun apuväline, ei korvaa oman veneen kokeilua ja seurantaa.
+    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026) sekä kokeneen
+    kilpapurjehtijan suullisia kokemusperäisiä vinkkejä, jotka on merkitty erikseen kirjallisista
+    lähteistä. Tuuli- ja aallokkohavainnot: Ilmatieteen laitos, avoin data (CC BY 4.0), asemat
+    Harmaja ja Suomenlinna. Tämä on ajattelun apuväline, ei korvaa oman veneen kokeilua ja
+    seurantaa.
   </footer>
 
 </div>
@@ -333,8 +353,27 @@
         huomautuksensa kanssa tuulihuomautuksen alla. Lisätty myös rehellinen huomautus
         siitä, ettei North tarkenna miten aallokko- ja kova tuuli -säännöt yhdistyvät, jos
         molemmat pätevät yhtä aikaa.
+  v2.4  Selvitetty vertaisarvioidusta kirjallisuudesta oliko TAKA-1 (aiemmin käyttämätön
+        kaaviopiste) tarpeeton. Havainto: mikään lähde ei suoraan testaa takaliikin
+        virtauslankojen korkeusriippuvuutta — ETU-diagnoosien pohjana oleva Viola & Flay
+        2011 -mekanismi (kierto/twist muuttaa paikallista kohtauskulmaa korkeuden mukaan)
+        koskee nimenomaan etuliikkiä. Sama fysikaalinen periaate koskee kuitenkin
+        loogisesti koko poikkileikkausta, myös takareunaa — tämä on ekstrapolointi
+        vahvistetusta mekanismista, ei itsenäisesti todistettu takaliikille. TAKA-1 ei
+        siis ole turha, mutta sen käyttö on rajattu TAKA-2:n vertailukohdaksi (ei oma
+        itsenäinen diagnoosi), ja tämä on merkitty avoimeksi hypoteesiksi molempien
+        TAKA-2-diagnoosien erottelevassa tarkistuksessa ja lähdeluettelossa.
+  v2.5  Lisätty uusi osio "Otanko fokasta kaiken irti?" — ei oirediagnostiikkaa vaan kolme
+        tapaa arvioida onko trimmi jo lähellä parasta: (1) vertailu toiseen veneeseen tai
+        omaan historiaan (HSK-trimmiklinikka), (2) Heikkilän nopeus-/nousukulmatavoite
+        keskituulessa (~5 solmua, ~45°), johon lisätty kokeneen kilpapurjehtijan tarkempi
+        vinkkiluku 5,1 solmua — merkitty erikseen suullisena kokemusperäisenä tietona, ei
+        kirjallisena lähteenä, säilyttäen sovelluksen lähdekurin, (3) Viola & Flay 2010:n
+        havainto, ettei suurin kuormitus tarkoita suurinta ajavaa voimaa, sekä käytännön
+        testi tämän tarkistamiseksi (löysää tarkoituksella ja katso muuttuuko peräsimen
+        paine).
 */
-const VERSION = 'v2.3';
+const VERSION = 'v2.5';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
 
@@ -572,7 +611,7 @@ const categories = [
   },
   {
     label: 'Keskiviivan ja takaliikin käytös',
-    note: 'Molemmat havainnot koskevat samaa säätöakselia (skuutti/skuuttipiste) mutta eri puolelta purjetta — käytä niitä toistensa vahvistuksena. Heikkilä Sailmaker: oikea trimmi näkyy siitä, että takaliikin kiertymää osoittava ylin liehu (TAKA-2) lentää suoraan taaksepäin.',
+    note: 'Havainnot koskevat samaa säätöakselia (skuutti/skuuttipiste) mutta eri puolelta purjetta — käytä niitä toistensa vahvistuksena. Heikkilä Sailmaker: oikea trimmi näkyy siitä, että takaliikin kiertymää osoittava ylin liehu (TAKA-2) lentää suoraan taaksepäin. TAKA-1 (alempi) ei ole itsenäinen diagnoosi, vaan vertailukohta TAKA-2:lle: jos vain toinen poikkeaa, ongelma on rajautunut siihen korkeuteen; jos molemmat poikkeavat samalla tavalla, kyse on koko takaliikistä.',
     items: [
       {
         id: 'keskiviiva_sisaanpain',
@@ -590,10 +629,10 @@ const categories = [
         havainto: 'Takaliikin ylin lanka (TAKA-2) kiertyy suojan puolelle sen sijaan että lentäisi suoraan taakse',
         ensisijainen: 'Skuutti on liian kireällä.',
         vaihtoehto: 'Skuuttipiste on liian takana, mikä sulkee takaliikkiä ylhäältä liikaa vaikka skuutti itsessään olisi sopiva.',
-        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos sekin on sisäänpäin, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 kiertyy, epäile ensin skuuttipisteen paikkaa.',
+        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos sekin on sisäänpäin, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 kiertyy, epäile ensin skuuttipisteen paikkaa. Vertaa myös TAKA-1:een (avoin hypoteesi, ei suoraan vahvistettu): jos molemmat kiertyvät suojaan, koko takaliikki on kireä eli kyse on todennäköisemmin skuutista; jos vain TAKA-2 kiertyy mutta TAKA-1 on normaali, ongelma on rajautunut yläosaan, mikä tukee skuuttipiste- tai keulaharusselitystä.',
         korjaus: 'Löysää skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli eteenpäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen: sen tulisi lentää suoraan taaksepäin.',
         luokka: 'perusteltu',
-        lahteet: ['Heikkilä Sailmaker'],
+        lahteet: ['Heikkilä Sailmaker', 'Viola & Flay 2011 (mekanismi, ekstrapoloitu etuliikiltä takaliikille — ei suoraan vahvistettu)'],
         sheetRelevant: true
       },
       {
@@ -601,10 +640,10 @@ const categories = [
         havainto: 'Takaliikin ylin lanka (TAKA-2) lepattaa tai roikkuu, ei pysy suorana',
         ensisijainen: 'Skuutti on liian löysällä — takaliikki on liian avoin (liikaa kiertoa/twistiä).',
         vaihtoehto: 'Skuuttipiste on liian edessä, mikä avaa takaliikkiä ylhäältä liikaa vaikka skuutti itsessään olisi sopiva.',
-        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos se on selvästi normaalia löysempi, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 lepattaa, epäile ensin skuuttipisteen paikkaa.',
+        erotteleva: 'Tarkista keskiviivan suunta samalla kertaa: jos se on selvästi normaalia löysempi, kyse on ensisijaisesti skuutista. Jos keskiviiva näyttää normaalilta mutta pelkkä TAKA-2 lepattaa, epäile ensin skuuttipisteen paikkaa. Vertaa myös TAKA-1:een (avoin hypoteesi, ei suoraan vahvistettu): jos molemmat lepattavat, koko takaliikki on liian avoin eli kyse on todennäköisemmin skuutista; jos vain TAKA-2 lepattaa mutta TAKA-1 on normaali, ongelma on rajautunut yläosaan, mikä tukee skuuttipiste-selitystä.',
         korjaus: 'Kiristä skuuttia hieman TAI siirrä skuuttipistettä yksi reikäväli taaksepäin — valitse kumpi erottelevan havainnon perusteella. Tarkkaile TAKA-2:ta uudelleen.',
         luokka: 'perusteltu',
-        lahteet: ['Heikkilä Sailmaker'],
+        lahteet: ['Heikkilä Sailmaker', 'Viola & Flay 2011 (mekanismi, ekstrapoloitu etuliikiltä takaliikille — ei suoraan vahvistettu)'],
         sheetRelevant: true
       }
     ]
