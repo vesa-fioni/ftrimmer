@@ -42,6 +42,7 @@
     display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap;
   }
   .wind-readout .ws{font-size:20px;font-weight:600;color:var(--sea-deep);}
+  .wind-readout .wind-station{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#5b6f7d;margin-bottom:4px;}
   .wind-readout .ws .unit{font-size:12px;font-weight:400;color:#5b6f7d;}
   .wind-readout .band-tag{
     font-family:"Helvetica Neue", Arial, sans-serif;font-size:11px;color:#fff;background:var(--sea);
@@ -70,9 +71,11 @@
   }
   .symptom-btn:active{transform:translateY(1px);}
   .symptom-btn.active{background:var(--sea-deep);color:#fff;}
+  .diag-slot{overflow:hidden;max-height:0;transition:max-height .3s ease;margin-bottom:0;}
+  .diag-slot.open{margin-bottom:8px;}
 
   /* Diagnoosikortti — kaikki tämän sisällä on selkeästi "tulos", ei sivun rakennetta */
-  .diag-card{margin-top:22px;background:var(--card);border:2px solid var(--sea-deep);border-radius:2px;padding:18px 20px;}
+  .diag-card{margin-top:8px;background:var(--card);border:2px solid var(--sea-deep);border-radius:2px;padding:18px 20px;}
   .badge{
     display:inline-block;font-family:"Helvetica Neue", Arial, sans-serif;font-size:10.5px;
     letter-spacing:.06em;text-transform:uppercase;color:#fff;border-radius:2px;padding:3px 9px;margin-bottom:14px;
@@ -93,7 +96,6 @@
 
   /* Referenssikuva */
   .ref-wrap{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:16px;margin-top:16px;}
-  .ref-caption{font-family:"Helvetica Neue", Arial, sans-serif;font-size:11.5px;color:#5b6f7d;margin-top:8px;}
   .ref-legend{margin-top:14px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:12.5px;color:var(--ink);}
   .ref-legend dt{font-weight:600;color:var(--sea-deep);float:left;clear:left;width:92px;}
   .ref-legend dd{margin:0 0 6px 100px;color:#465a68;}
@@ -123,7 +125,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.6</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.7</span> · oire → syy → korjaus</p>
     <h1>Mikä fokassa on vialla?</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -131,6 +133,7 @@
 
     <div class="wind-readout">
       <div>
+        <div class="wind-station">Tuuli — Harmaja</div>
         <span class="ws"><span id="wsVal">–</span><span class="unit"> m/s</span></span>
         <span class="band-tag" id="bandTag">tuuli haetaan…</span>
       </div>
@@ -154,9 +157,9 @@
            näistä laskettu keskimitta (pää-jalan keskipiste) on ~5,66 m, joka on 97,5 %
            luokkasääntöjen (CR 9.32) 5800 mm:n maksimista — sisäisesti johdonmukainen. -->
       <polygon points="150,20 266.9,400 96.4,382.9" fill="none" stroke="#0f2438" stroke-width="2"/>
-      <!-- keskilatta -->
+      <!-- keskiviiva (ei latta - folkkarin fokassa ei ole läpi purjeen menevää lattaa) -->
       <line x1="121.9" y1="210" x2="208.4" y2="210" stroke="#0f2438" stroke-width="1" stroke-dasharray="4,3"/>
-      <text x="165" y="200" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskilatta</text>
+      <text x="165" y="200" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskiviiva</text>
       <!-- etuliikin havaintopisteet ETU1-4: sijoitettu ~15% purjeen leveyssuunnassa luffilta
            sisäänpäin (todellinen virtauslangan kiinnityskohta, ei itse saumassa) -->
       <circle cx="222.8" cy="324" r="3" fill="#1c5d78"/><line x1="222.8" y1="324" x2="245" y2="324" stroke="#1c5d78" stroke-width="0.75"/><text x="251" y="328" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
@@ -199,7 +202,7 @@
       <dt>Skuuttikulma</dt><dd>Takakulma, johon skuutti kiinnittyy.</dd>
       <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös.</dd>
       <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
-      <dt>Keskilatta</dt><dd>Fokan keskimmäinen latta.</dd>
+      <dt>Keskiviiva</dt><dd>Fokan keskikohdan merkki, ei läpi menevä latta.</dd>
       <dt>Skuuttipiste</dt><dd>Kohta kannella, johon skuutin kääntöplokki on kiinnitetty.</dd>
       <dt>Fokan falli</dt><dd>Nostoköysi (halyard).</dd>
     </dl>
@@ -208,8 +211,6 @@
   <div class="divider">Valitse havainto</div>
 
   <div id="symptomWrap"></div>
-
-  <div id="diagWrap"></div>
 
   <details class="collapsible">
     <summary>Mitä näyttöluokat tarkoittavat</summary>
@@ -268,8 +269,14 @@
         (ei enää itse saumaan/luffiin), ohuilla liitinviivoilla omiin labeleihinsa.
   v1.6  Poistettu kaavakuvan alta pitkä tekninen kuvateksti (mittojen laskentaperustelut) ja
         tiivistetty sanaston selitykset ytimekkäämmiksi — pelkkä lyhyt selitys per termi.
+  v1.7  Kolme muutosta: (1) Lisätty tuulen havaintopaikka (Harmaja) näkyviin lukeman
+        yläpuolelle. (2) Korjattu termi "keskilatta" -> "keskiviiva" kauttaaltaan (kaavio,
+        sanasto, diagnostiikkadata) — folkkarin fokassa ei ole läpi purjeen menevää lattaa,
+        vain keskikohdan merkki. (3) Diagnoosi avautuu nyt haitarityylisesti suoraan
+        valitun havaintonapin alle (aiemmin renderöityi kiinteään paikkaan sivun alalaitaan,
+        jota ei huomannut). Napin klikkaaminen uudelleen sulkee haitarin.
 */
-const VERSION = 'v1.6';
+const VERSION = 'v1.7';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
@@ -399,8 +406,8 @@ const categories = [
         id: 'etu_alin_ensin',
         havainto: 'ETU-1 (alin pari) reagoi ensin, kun nouset hitaasti tuuleen',
         ensisijainen: 'Skuuttipiste on todennäköisesti liian edessä.',
-        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
-        erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
+        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskiviivan suunta ennen kuin siirrät skuuttipistettä.',
+        erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
         lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
@@ -409,8 +416,8 @@ const categories = [
         id: 'etu_ylin_ensin',
         havainto: 'ETU-4 (ylin pari) reagoi ensin, kun nouset hitaasti tuuleen',
         ensisijainen: 'Skuuttipiste on todennäköisesti liian takana.',
-        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskilatan suunta ennen kuin siirrät skuuttipistettä.',
-        erotteleva: 'Katso keskilatan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskilatta on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
+        vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskiviivan suunta ennen kuin siirrät skuuttipistettä.',
+        erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
         luokka: 'hypoteesi',
         lahteet: ['Viola & Flay 2011 (mekanismi)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta']
@@ -418,15 +425,15 @@ const categories = [
     ]
   },
   {
-    label: 'Keskilatan suunta',
+    label: 'Keskiviivan suunta',
     items: [
       {
-        id: 'keskilatta_sisaanpain',
-        havainto: 'Keskilatta on selvästi sisäänpäin keskilinjasta',
+        id: 'keskiviiva_sisaanpain',
+        havainto: 'Keskiviiva on selvästi sisäänpäin keskilinjasta',
         ensisijainen: 'Skuutti on liian kireällä.',
         vaihtoehto: 'Forestay sag on muuttunut (esim. vantit kiristyneet purjehduksen aikana) ja siirtänyt koko purjeen muotoa.',
-        erotteleva: 'Tarkista fokan muu muoto ja etuliikin rypyt. Jos vain keskilatta on poikkeava muun purjeen ollessa normaali, kyse on skuutista.',
-        korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskilatan suunta uudelleen. Suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
+        erotteleva: 'Tarkista fokan muu muoto ja etuliikin rypyt. Jos vain keskiviiva on poikkeava muun purjeen ollessa normaali, kyse on skuutista.',
+        korjaus: 'Löysää skuuttia 1–2 cm ja tarkista keskiviivan suunta uudelleen. Suurin purjeen kuormitus ei tarkoita suurinta ajavaa voimaa — hieman löysemmällä trimmatulla fokalla saa usein enemmän vetoa ja vähemmän kallistusta.',
         luokka: 'vahva',
         lahteet: ['North Sails', 'Heikkilä Sailmaker', 'Viola & Flay 2010 (täysimittainen koe)', 'Biancolini et al. 2014']
       }
@@ -456,7 +463,6 @@ function windNoteFor(item){
 
 // ---------- Renderöinti ----------
 const symptomWrap = document.getElementById('symptomWrap');
-const diagWrap = document.getElementById('diagWrap');
 let activeId = null;
 
 function luokkaLabel(l){
@@ -469,15 +475,28 @@ function renderSymptoms(){
     html += '<div class="cat-label">' + cat.label + '</div>';
     cat.items.forEach(item => {
       html += '<button class="symptom-btn" data-id="' + item.id + '">' + item.havainto + '</button>';
+      html += '<div class="diag-slot" id="slot-' + item.id + '"></div>';
     });
   });
   symptomWrap.innerHTML = html;
   symptomWrap.querySelectorAll('.symptom-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const wasActive = btn.classList.contains('active');
+      // suljetaan kaikki avoinna olevat ennen uuden avaamista
       symptomWrap.querySelectorAll('.symptom-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeId = btn.dataset.id;
-      renderActiveDiagnosis();
+      symptomWrap.querySelectorAll('.diag-slot').forEach(slot => {
+        slot.style.maxHeight = null;
+        slot.classList.remove('open');
+        slot.innerHTML = '';
+      });
+      if(wasActive){
+        activeId = null;
+      } else {
+        btn.classList.add('active');
+        activeId = id;
+        renderActiveDiagnosis();
+      }
     });
   });
 }
@@ -491,6 +510,8 @@ function renderActiveDiagnosis(){
   if(!activeId) return;
   const item = findItem(activeId);
   if(!item) return;
+  const slot = document.getElementById('slot-' + activeId);
+  if(!slot) return;
   let html = '<div class="diag-card">';
   html += '<span class="badge ' + item.luokka + '">' + luokkaLabel(item.luokka) + '</span>';
   html += '<div class="diag-row"><div class="diag-k">Ensisijainen epäily</div><div class="diag-v">' + item.ensisijainen + '</div></div>';
@@ -502,7 +523,11 @@ function renderActiveDiagnosis(){
   html += windNoteFor(item);
   html += '<div class="src">' + item.lahteet.join(', ') + '</div>';
   html += '</div>';
-  diagWrap.innerHTML = html;
+  slot.innerHTML = html;
+  slot.classList.add('open');
+  // asetetaan max-height sisällön mukaan pehmeää haitariavautumista varten
+  requestAnimationFrame(() => { slot.style.maxHeight = slot.scrollHeight + 'px'; });
+  slot.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
 document.getElementById('versionTag').textContent = VERSION;
