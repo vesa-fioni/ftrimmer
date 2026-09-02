@@ -126,7 +126,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.5</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v2.6</span> · oire → syy → korjaus</p>
     <h1>Fokan trimmaaminen</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -177,7 +177,9 @@
       <line x1="121.9" y1="210" x2="208.4" y2="210" stroke="#0f2438" stroke-width="1" stroke-dasharray="4,3"/>
       <text x="165" y="200" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskiviiva</text>
       <!-- etuliikin havaintopisteet ETU1-4: sijoitettu ~15% purjeen leveyssuunnassa luffilta
-           sisäänpäin (todellinen virtauslangan kiinnityskohta, ei itse saumassa) -->
+           sisäänpäin (todellinen virtauslangan kiinnityskohta, ei itse saumassa). IT4Causes
+           -purjehdusopas suosittelee 7,5-15% purjeen leveydestä telltale-korkeudella — 15%
+           on tämän haarukan yläreunassa, ei mielivaltainen valinta. -->
       <circle cx="222.8" cy="324" r="3" fill="#1c5d78"/><line x1="222.8" y1="324" x2="245" y2="324" stroke="#1c5d78" stroke-width="0.75"/><text x="251" y="328" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
       <text x="251" y="340" font-family="Helvetica Neue, Arial" font-size="8" fill="#8a99a3">(T=tuuli, S=suoja)</text>
       <circle cx="204.6" cy="248" r="3" fill="#1c5d78"/><line x1="204.6" y1="248" x2="222" y2="248" stroke="#1c5d78" stroke-width="0.75"/><text x="228" y="252" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-2</text>
@@ -257,10 +259,11 @@
   <footer>
     Diagnostiikka yhdistää North Sailsin, Heikkilä Sailmakerin ja HSK-trimmiklinikan
     (Kæstel &amp; Lindberg) fokkaohjeet vertaisarvioituun purjeaerodynamiikan tutkimukseen
-    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026) sekä kokeneen
-    kilpapurjehtijan suullisia kokemusperäisiä vinkkejä, jotka on merkitty erikseen kirjallisista
-    lähteistä. Tuuli- ja aallokkohavainnot: Ilmatieteen laitos, avoin data (CC BY 4.0), asemat
-    Harmaja ja Suomenlinna. Tämä on ajattelun apuväline, ei korvaa oman veneen kokeilua ja
+    (mm. Viola &amp; Flay 2010/2011, Biancolini et al. 2014, Morin et al. 2026), yleisiin
+    käytännön trimmioppaisiin (mm. Cruising World, IT4Causes) sekä kokeneen kilpapurjehtijan
+    suullisia kokemusperäisiä vinkkejä, jotka on merkitty erikseen kirjallisista lähteistä.
+    Tuuli- ja aallokkohavainnot: Ilmatieteen laitos, avoin data (CC BY 4.0), asemat Harmaja
+    ja Suomenlinna. Tämä on ajattelun apuväline, ei korvaa oman veneen kokeilua ja
     seurantaa.
   </footer>
 
@@ -372,8 +375,20 @@
         havainto, ettei suurin kuormitus tarkoita suurinta ajavaa voimaa, sekä käytännön
         testi tämän tarkistamiseksi (löysää tarkoituksella ja katso muuttuuko peräsimen
         paine).
+  v2.6  Haettu käytännön kilpapurjehduksen trimmioppaista (ei vertaisarvioitua kirjallisuutta)
+        vahvistus ETU-1/ETU-4-diagnoosien lead-korjaussuunnalle. Cruising World -trimmiopas
+        toteaa täsmälleen saman säännön molempiin suuntiin kryssikontekstissa ("jos ylin
+        liehu luoppaa ensin, siirrä lead eteen; jos alin ensin, siirrä taakse") — vahvempi
+        vahvistus kuin aiempi pelkkä akateeminen ekstrapolointi. IT4Causes-purjehdusopas
+        vahvistaa saman suunnan lenssin twistikontekstissa. Nostettu molempien ETU-diagnoosien
+        näyttöluokka avoimesta hypoteesista perustelluksi diagnoosiksi, koska mukana on nyt
+        sekä mekanismi (Viola & Flay 2011) että kaksi riippumatonta käytännön lähdettä samaan
+        suuntaan — ei silti Folkbåt-kohtaisesti vahvistettu, mikä on mainittu lähdeluettelossa.
+        Sama IT4Causes-lähde vahvisti myös, että ETU-pisteiden 15%:n sisennys luffilta on
+        käytännön ohjeiden (7,5–15% purjeen leveydestä) sisällä, tosin niiden yläreunassa —
+        lisätty huomautus SVG-kommenttiin.
 */
-const VERSION = 'v2.5';
+const VERSION = 'v2.6';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 const WAVE_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::wave::timevaluepair&place=Suomenlinna";
 
@@ -583,7 +598,7 @@ const categories = [
   },
   {
     label: 'Etuliikin virtauslankojen käytös hitaassa nostossa',
-    note: 'Jokaisessa ETU-korkeudessa on kaksi lankaa: tuulen puolen ja suojan puolen lanka. Tuuli/suoja määräytyy aina senhetkisen halssin mukaan, ei kankaan kiinteästä puolesta — halssin vaihtuessa sama fyysinen lanka vaihtaa nimeä. "Pari reagoi" tarkoittaa, että kummankin puolen lanka samalla korkeudella alkaa käyttäytyä poikkeavasti, riippumatta siitä kummalla halssilla purjehdit.',
+    note: 'Jokaisessa ETU-korkeudessa on kaksi lankaa: tuulen puolen ja suojan puolen lanka. Tuuli/suoja määräytyy aina senhetkisen halssin mukaan, ei kankaan kiinteästä puolesta — halssin vaihtuessa sama fyysinen lanka vaihtaa nimeä. "Pari reagoi" tarkoittaa, että kummankin puolen lanka samalla korkeudella alkaa käyttäytyä poikkeavasti, riippumatta siitä kummalla halssilla purjehdit. Sääntö (ylin liehu ensin → lead eteen, alin ensin → lead taakse) toistuu samansuuntaisena sekä Viola & Flayn mekanismissa että käytännön trimmioppaissa (Cruising World, IT4Causes) — ei kuitenkaan Folkbåt-kohtaisesti vahvistettuna.',
     items: [
       {
         id: 'etu_alin_ensin',
@@ -592,8 +607,8 @@ const categories = [
         vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskiviivan suunta ennen kuin siirrät skuuttipistettä.',
         erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli taaksepäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
-        luokka: 'hypoteesi',
-        lahteet: ['Viola & Flay 2011 (mekanismi)', 'North Sails (skuuttipisteen tuuli-/aallokko-ohje)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta'],
+        luokka: 'perusteltu',
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'Cruising World -trimmiopas (sama sääntö sama suuntaisesti: alin liehu ensin → lead taakse)', 'North Sails (skuuttipisteen tuuli-/aallokko-ohje)', 'ei Folkbåt-kohtaista vahvistusta, mutta sama suunta toistuu yleisissä trimmioppaissa'],
         leadRelevant: true
       },
       {
@@ -603,8 +618,8 @@ const categories = [
         vaihtoehto: 'Skuuttijännitys tai jokin muu twistin syy — tarkista aina keskiviivan suunta ennen kuin siirrät skuuttipistettä.',
         erotteleva: 'Katso keskiviivan suuntaa: jos se on selvästi sisäänpäin, kyse on ensin skuuttijännityksestä. Jos keskiviiva on normaalissa asennossa, skuuttipisteen paikka on todennäköisempi syy.',
         korjaus: 'Siirrä skuuttipistettä yksi reikäväli eteenpäin ja tarkkaile, mikä pari reagoi ensin seuraavalla nostolla.',
-        luokka: 'hypoteesi',
-        lahteet: ['Viola & Flay 2011 (mekanismi)', 'North Sails (skuuttipisteen tuuli-/aallokko-ohje)', 'projektin oma synteesi — ei Folkbåt-kohtaista vahvistusta'],
+        luokka: 'perusteltu',
+        lahteet: ['Viola & Flay 2011 (mekanismi)', 'Cruising World -trimmiopas (sama sääntö samansuuntaisesti: ylin liehu ensin → lead eteen)', 'IT4Causes-purjehdusopas (samansuuntainen ohje, mutta lenssin twistikontekstissa, ei kryssin nostotestissä)', 'North Sails (skuuttipisteen tuuli-/aallokko-ohje)', 'ei Folkbåt-kohtaista vahvistusta, mutta sama suunta toistuu yleisissä trimmioppaissa'],
         leadRelevant: true
       }
     ]
