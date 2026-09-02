@@ -123,7 +123,7 @@
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.1</span> · oire → syy → korjaus</p>
+    <p class="eyebrow">Fokan trimmidiagnostiikka <span id="versionTag">v1.5</span> · oire → syy → korjaus</p>
     <h1>Mikä fokassa on vialla?</h1>
     <p class="sub"><a href="index.html">← Takaisin sääpohjaiseen trimmisuositukseen</a></p>
     <p class="intro">Valitse alta se, mitä havaitset fokassa juuri nyt. Sovellus näyttää
@@ -145,55 +145,71 @@
   </header>
 
   <div class="ref-wrap">
-    <svg viewBox="0 0 320 440" width="100%" style="max-width:280px;display:block;margin:0 auto;">
-      <!-- Oma yksinkertaistettu kaavakuva fokan osista ja havaintopisteistä.
-           Ei perustu NFIA:n viralliseen luokkapiirustukseen — vain nimeää samat termit. -->
-      <polygon points="70,20 40,380 250,380" fill="none" stroke="#0f2438" stroke-width="2"/>
+    <svg viewBox="-50 0 400 460" width="100%" style="max-width:260px;display:block;margin:0 auto;">
+      <!-- Oma kaavakuva fokan osista ja havaintopisteistä, EI jäljennös NFIA:n piirustuksesta.
+           Mittasuhteet ja kulmat laskettu käyttäjän itse jäljittämästä ääriviivasta luokan
+           omalla Sail-Spars-Rigging-piirustuksella (ei silmämääräisestä arviosta eikä
+           suorakulmaisesta oletuksesta): luff ~6,03 m kallistuu ~17° pystystä oikealle,
+           takaliikki ~5,57 m kallistuu ~8° pystystä vasemmalle, jalka ~2,6 m. Tarkistettu:
+           näistä laskettu keskimitta (pää-jalan keskipiste) on ~5,66 m, joka on 97,5 %
+           luokkasääntöjen (CR 9.32) 5800 mm:n maksimista — sisäisesti johdonmukainen. -->
+      <polygon points="150,20 266.9,400 96.4,382.9" fill="none" stroke="#0f2438" stroke-width="2"/>
       <!-- keskilatta -->
-      <line x1="58" y1="215" x2="150" y2="215" stroke="#0f2438" stroke-width="1" stroke-dasharray="4,3"/>
-      <text x="156" y="219" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskilatta</text>
-      <!-- etuliikin havaintopisteet ETU1-4 -->
-      <circle cx="52" cy="335" r="3" fill="#1c5d78"/><text x="20" y="339" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
-      <circle cx="47" cy="270" r="3" fill="#1c5d78"/><text x="15" y="274" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-2</text>
-      <circle cx="61" cy="140" r="3" fill="#1c5d78"/><text x="12" y="144" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-3</text>
-      <circle cx="66" cy="70" r="3" fill="#1c5d78"/><text x="12" y="74" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-4</text>
-      <!-- takaliikin havaintopisteet -->
-      <circle cx="180" cy="290" r="3" fill="#a5462b"/><text x="186" y="294" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-1</text>
-      <circle cx="130" cy="160" r="3" fill="#a5462b"/><text x="136" y="164" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-2</text>
+      <line x1="121.9" y1="210" x2="208.4" y2="210" stroke="#0f2438" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="165" y="200" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#b3874a">Keskilatta</text>
+      <!-- etuliikin havaintopisteet ETU1-4: sijoitettu ~15% purjeen leveyssuunnassa luffilta
+           sisäänpäin (todellinen virtauslangan kiinnityskohta, ei itse saumassa) -->
+      <circle cx="222.8" cy="324" r="3" fill="#1c5d78"/><line x1="222.8" y1="324" x2="245" y2="324" stroke="#1c5d78" stroke-width="0.75"/><text x="251" y="328" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-1</text>
+      <circle cx="204.6" cy="248" r="3" fill="#1c5d78"/><line x1="204.6" y1="248" x2="222" y2="248" stroke="#1c5d78" stroke-width="0.75"/><text x="228" y="252" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-2</text>
+      <circle cx="186.4" cy="172" r="3" fill="#1c5d78"/><line x1="186.4" y1="172" x2="199" y2="172" stroke="#1c5d78" stroke-width="0.75"/><text x="204" y="176" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-3</text>
+      <circle cx="168.2" cy="96"  r="3" fill="#1c5d78"/><line x1="168.2" y1="96"  x2="176" y2="96"  stroke="#1c5d78" stroke-width="0.75"/><text x="181" y="100" font-family="Helvetica Neue, Arial" font-size="10" fill="#1c5d78">ETU-4</text>
+      <!-- takaliikin havaintopisteet (vasen reuna, leech) -->
+      <circle cx="112.5" cy="274" r="3" fill="#a5462b"/><text x="104" y="278" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-1</text>
+      <circle cx="131.2" cy="147" r="3" fill="#a5462b"/><text x="123" y="151" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10" fill="#a5462b">TAKA-2</text>
       <!-- reunat -->
-      <text x="35" y="200" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68" transform="rotate(-84 35 200)">Etuliikki</text>
-      <text x="175" y="185" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68" transform="rotate(58 175 185)">Takaliikki</text>
-      <text x="130" y="398" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Alaliikki (jalka)</text>
+      <text x="182" y="58" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Etuliikki</text>
+      <text x="182" y="74" font-family="Helvetica Neue, Arial" font-size="10" fill="#8a99a3">(keulastaagi)</text>
+      <text x="103" y="347" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Takaliikki</text>
+      <text x="181" y="410" text-anchor="middle" font-family="Helvetica Neue, Arial" font-size="11" fill="#465a68">Alaliikki (jalka)</text>
       <!-- kulmat -->
-      <text x="66" y="14" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Pää</text>
-      <text x="6" y="392" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Nokka</text>
-      <text x="252" y="378" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Nurkka</text>
+      <text x="140" y="34" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Pää</text>
+      <text x="273" y="404" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Halssikulma</text>
+      <text x="90" y="370" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#0f2438">Skuuttikulma</text>
       <!-- skuutti ja skuuttipiste -->
-      <line x1="250" y1="380" x2="222" y2="408" stroke="#0f2438" stroke-width="1.5"/>
-      <circle cx="222" cy="408" r="3.5" fill="#b3874a"/>
-      <text x="230" y="412" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#b3874a">Skuuttipiste</text>
-      <text x="200" y="396" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Skuutti</text>
-      <!-- falli -->
-      <line x1="70" y1="20" x2="70" y2="4" stroke="#0f2438" stroke-width="1" marker-end="url(#arrow)"/>
-      <text x="76" y="12" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Falli</text>
+      <line x1="96.4" y1="382.9" x2="75" y2="413" stroke="#0f2438" stroke-width="1.5"/>
+      <circle cx="75" cy="413" r="3.5" fill="#b3874a"/>
+      <text x="60" y="430" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#b3874a">Skuuttipiste</text>
+      <text x="68" y="397" text-anchor="end" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Skuutti</text>
+      <!-- falli: jatkuu luffin (etuliikin) suuntaisena päästä ylöspäin, koska falli vetää
+           etuliikkiä kireälle juuri keulastaagin suuntaan -->
+      <line x1="150" y1="20" x2="145.3" y2="4.7" stroke="#0f2438" stroke-width="1" marker-end="url(#arrow)"/>
+      <text x="152" y="8" font-family="Helvetica Neue, Arial" font-size="10.5" fill="#465a68">Fokan falli</text>
       <defs>
         <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" fill="#0f2438"/>
         </marker>
       </defs>
     </svg>
-    <p class="ref-caption">Oma yksinkertaistettu kaavakuva fokan osista — ei jäljennös luokan
-    virallisesta piirustuksesta, vain samojen termien sijoittelu.</p>
+    <p class="ref-caption">Kaavakuvan geometria ja kulmat on laskettu suoraan käyttäjän itse
+    jäljittämästä ääriviivasta luokan Sail-Spars-Rigging-piirustuksella (ei silmämääräisestä
+    arviosta eikä oletetusta suorasta kulmasta): luff ~6,0 m kallistuu ~17° pystystä, takaliikki
+    ~5,6 m kallistuu ~8°, jalka ~2,6 m. Tarkistettu luokkasääntöjä (CR 9.32) vasten: laskettu
+    keskimitta ~5,66 m osuu 97,5 %:iin 5800 mm:n sääntörajasta. Ei silti pikselintarkka
+    jäljennös — pohjautuu käsin merkittyihin kulmapisteisiin. Huom: vanhoissa virallisissa
+    piirustuksissa skuutti on kaksiköytinen per puoli — nykykäytännössä käytetään yhtä köyttä,
+    kuten tässäkin.</p>
     <dl class="ref-legend">
-      <dt>Etuliikki</dt><dd>Purjeen etureuna (luff). Pää–nokka-välinen sivu.</dd>
-      <dt>Takaliikki</dt><dd>Purjeen takareuna (leech). Pää–nurkka-välinen sivu.</dd>
-      <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot). Nokka–nurkka-välinen sivu.</dd>
-      <dt>Pää / Nokka / Nurkka</dt><dd>Head / tack / clew — purjeen kolme kulmaa.</dd>
+      <dt>Etuliikki</dt><dd>Purjeen etureuna (luff, ~6,0 m), kulkee keulastaagia pitkin, kallistuu ~17° pystystä.</dd>
+      <dt>Takaliikki</dt><dd>Purjeen takareuna (leech, ~5,6 m), kallistuu ~8° pystystä toiseen suuntaan.</dd>
+      <dt>Alaliikki</dt><dd>Purjeen alareuna eli jalka (foot, ~2,6 m). Halssikulma–skuuttikulma-välinen sivu.</dd>
+      <dt>Pää</dt><dd>Head — purjeen yläkulma, johon falli kiinnittyy.</dd>
+      <dt>Halssikulma</dt><dd>Tack — etukulma, kiinnittyy keulaan/halssin kiinnityspisteeseen.</dd>
+      <dt>Skuuttikulma</dt><dd>Clew — takakulma, johon skuutti kiinnittyy.</dd>
       <dt>ETU-1…4</dt><dd>Etuliikin virtauslankaparit alhaalta ylös. Käytetään telltale-diagnostiikassa.</dd>
       <dt>TAKA-1…2</dt><dd>Takaliikin virtauslangat, kaksi korkeutta.</dd>
       <dt>Keskilatta</dt><dd>Fokan keskimmäinen latta — sen suunta on skuuttijännityksen tärkein havainto.</dd>
       <dt>Skuuttipiste</dt><dd>Kohta kannella/ruffilla, johon skuutin kääntöplokki on kiinnitetty.</dd>
-      <dt>Falli</dt><dd>Fokan nostoköysi (halyard) — säätää fallin kireyttä.</dd>
+      <dt>Fokan falli</dt><dd>Nostoköysi (halyard) — säätää fallin kireyttä.</dd>
     </dl>
   </div>
 
@@ -230,8 +246,36 @@
         divider-tyyliä kuin etusivun pääjaot ("Trimmisuositus" ym.), jotta ne erottuvat
         selvästi diagnoosikortin sisäisistä kenttäotsikoista (jotka pysyvät pienempinä).
         Lisätty oma (ei NFIA-piirustukseen perustuva) kaavakuva fokan termeistä alkuun.
+  v1.2  KORJAUS: kaavakuvan geometria oli peilikuvana todellisuuteen nähden. Käyttäjä vahvisti
+        luokan omasta piirustuksesta, että etuliikki (keulastaagin puoli) on oikealla ja
+        takaliikki vasemmalla, halssikulma oikealla alhaalla ja skuuttikulma vasemmalla
+        alhaalla. Käännetty koko kaavio vastaavasti. Korjattu myös kulmien nimet: "Nokka"
+        ja "Nurkka" olivat omia yleiskielisiä sanoja, ei oikeita purjehdustermejä — vaihdettu
+        Halssikulmaksi (tack) ja Skuuttikulmaksi (clew). Lisätty huomio, että vanhoissa
+        virallisissa piirustuksissa skuutti on kaksiköytinen per puoli, nykyään yksi.
+  v1.3  Kaavion mittasuhteet laskettu luokkasääntöjen (CR 9.32) tarkoista lukemista sen
+        sijaan että ne olisi arvioitu silmämääräisesti: keskimitta (pää-jalan keskipiste)
+        enintään 5800mm, keskileveys 1270mm 2700mm päästä päätä. Yhdistettynä jalan
+        pituusarvioon (~2600mm, North Sails/Heikkilän skuuttipisteohjeista) ratkaistu
+        luff ≈5650mm olettaen suora jalka: sqrt((jalka/2)²+luff²)=keskimitta. Tarkistettu
+        laskennallisesti, että tämä yksinkertaistus vastaa keskileveysvaatimusta ~2 %:n
+        tarkkuudella — riittää kaavakuvaksi, muttei ole lofattu kopio, koska skannauksen
+        resoluutio ei riitä pikselintarkkaan mittaan.
+  v1.4  KORJAUS: v1.3:n suora luff (90° kulma jalkaan) oli epärealistinen yksinkertaistus —
+        käyttäjä osoitti omalla ääriviivajäljellään, että TODELLISUUDESSA kumpikin reuna
+        kallistuu kohti huippua. Laskettu kulmat ja pituudet suoraan käyttäjän jäljittämien
+        kulmapisteiden pikselikoordinaateista (ei enää suorakulmaolettamasta): luff ~6,0 m
+        kallistuu ~17° pystystä oikealle, takaliikki ~5,6 m kallistuu ~8° vasemmalle, jalka
+        ~2,6 m. Tarkistettu luokkasääntöjä (CR 9.32) vasten: näin laskettu keskimitta ~5,66 m
+        osuu 97,5 %:iin 5800 mm:n sääntörajasta — sisäisesti johdonmukainen. Laajennettu
+        viewBox, koska Halssikulma-teksti leikkautui reunasta.
+  v1.5  Kaksi tarkennusta: (1) fallin nuoli jatkuu nyt luffin suuntaisena etustaagia pitkin,
+        ei enää suoraan ylös — falli vetää etuliikkiä kireälle juuri keulastaagin suuntaan,
+        ei mielivaltaiseen pystysuuntaan. (2) ETU-1…4-merkit siirretty ~15% purjeen
+        leveydestä luffilta sisäänpäin todellista virtauslangan kiinnityskohtaa vastaavasti
+        (ei enää itse saumaan/luffiin), ohuilla liitinviivoilla omiin labeleihinsa.
 */
-const VERSION = 'v1.1';
+const VERSION = 'v1.5';
 const WIND_URL = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Harmaja&maxlocations=1";
 
 const state = { windSpeed: null };
