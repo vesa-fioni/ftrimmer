@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trimmikoe — Nordic Folkboat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --paper: #EEE8DA;
+    --paper-raised: #F6F2E7;
+    --ink: #16283B;
+    --ink-soft: #46586B;
+    --line: #C9BFA6;
+    --brass: #8A7F5E;
+    --good: #3C6E47;
+    --bad: #9C3D2E;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding: 32px 18px 80px;
+  }
+
+  main{
+    width:100%;
+    max-width: 620px;
+  }
+
+  header{ margin-bottom: 34px; }
+
+  .rig-motif{
+    width:100%;
+    height:86px;
+    display:block;
+    margin-bottom: 18px;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: 1.9rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+
+  .subtitle{
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height:1.5;
+    max-width: 46ch;
+  }
+
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin: 26px 0 22px;
+  }
+
+  .progress-track{ flex:1; height:2px; background: var(--line); position:relative; }
+  .progress-fill{ position:absolute; left:0; top:0; bottom:0; background: var(--ink); width:0%; transition: width .35s ease; }
+  .progress-label{ font-family:'IBM Plex Mono', monospace; font-size:0.8rem; color: var(--ink-soft); white-space:nowrap; }
+
+  .card{ background: var(--paper-raised); border: 1px solid var(--line); padding: 28px 26px; }
+
+  .evidence-badge{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    padding: 3px 9px;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    margin-bottom: 16px;
+  }
+  .evidence-badge.avoin{ border-color:#a8763f; color:#a8763f; }
+
+  .question-text{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size: 1.28rem;
+    line-height:1.4;
+    margin: 0 0 24px;
+  }
+
+  .options{ display:flex; flex-direction:column; border-top: 1px solid var(--line); }
+
+  .option{
+    text-align:left;
+    background:none;
+    border:none;
+    border-bottom: 1px solid var(--line);
+    border-left: 3px solid transparent;
+    padding: 14px 10px 14px 14px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size: 0.98rem;
+    line-height:1.45;
+    color: var(--ink);
+    cursor:pointer;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .option:hover:not(:disabled){ background: rgba(22,40,59,0.05); }
+  .option:disabled{ cursor:default; }
+
+  .option.correct-pick{ border-left-color: var(--good); background: rgba(60,110,71,0.08); }
+  .option.wrong-pick{ border-left-color: var(--bad); background: rgba(156,61,46,0.07); }
+  .option.reveal-correct{ border-left-color: var(--good); }
+
+  .feedback{ margin-top: 22px; padding-top: 20px; border-top: 1px dashed var(--line); }
+  .feedback-verdict{ font-family:'Fraunces', serif; font-weight:600; font-size: 1.05rem; margin: 0 0 10px; }
+  .feedback-verdict.good{ color: var(--good); }
+  .feedback-verdict.bad{ color: var(--bad); }
+
+  .feedback-text{ font-size: 0.96rem; line-height:1.55; color: var(--ink); margin: 0 0 12px; }
+  .feedback-source{ font-family:'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--ink-soft); }
+
+  .next-row{ margin-top: 24px; display:flex; justify-content:flex-end; }
+
+  button.primary{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:500;
+    font-size: 0.95rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 11px 22px;
+    cursor:pointer;
+  }
+  button.primary:hover{ background:#0d1b28; }
+
+  .start-card, .end-card{ background: var(--paper-raised); border: 1px solid var(--line); padding: 32px 26px; text-align:left; }
+  .start-card p, .end-card p{ line-height:1.6; color: var(--ink-soft); font-size:0.98rem; }
+
+  .score-big{ font-family:'Fraunces', serif; font-weight:600; font-size: 2.6rem; margin: 4px 0 2px; }
+  .score-sub{ color: var(--ink-soft); font-size:0.92rem; margin-bottom: 26px; }
+
+  .review-item{ border-top: 1px solid var(--line); padding: 16px 0; }
+  .review-item:last-child{ border-bottom: 1px solid var(--line); }
+  .review-q{ font-weight:600; font-size: 0.95rem; margin: 0 0 8px; }
+  .review-tag{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size: 0.72rem; margin-bottom: 8px; }
+  .review-tag.ok{ color: var(--good); }
+  .review-tag.miss{ color: var(--bad); }
+  .review-text{ font-size: 0.92rem; color: var(--ink-soft); line-height:1.5; }
+
+  .hidden{ display:none; }
+
+  @media (max-width: 480px){
+    .card, .start-card, .end-card{ padding: 22px 18px; }
+    h1{ font-size: 1.6rem; }
+    .question-text{ font-size: 1.12rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <svg class="rig-motif" viewBox="0 0 600 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="8" x2="70" y2="78" stroke="#16283B" stroke-width="1.2"/>
+      <line x1="70" y1="14" x2="230" y2="72" stroke="#16283B" stroke-width="1.2"/>
+      <line x1="70" y1="30" x2="150" y2="72" stroke="#16283B" stroke-width="1"/>
+      <line x1="70" y1="78" x2="340" y2="78" stroke="#16283B" stroke-width="1.2"/>
+      <line x1="46" y1="8" x2="94" y2="8" stroke="#8A7F5E" stroke-width="1"/>
+      <line x1="46" y1="44" x2="94" y2="44" stroke="#8A7F5E" stroke-width="1"/>
+      <circle cx="70" cy="8" r="2.2" fill="#16283B"/>
+      <circle cx="70" cy="78" r="2.2" fill="#16283B"/>
+      <circle cx="230" cy="72" r="2.2" fill="#16283B"/>
+    </svg>
+    <h1>Trimmikoe</h1>
+    <p class="subtitle">Syy-seuraus-kysymyksiä trimmilähteistä: North Sails, Heikkilä Sailmaker, HSK-trimmiklinikka ja Paul Elvström. Tavoite ei ole muistaa lukuja, vaan tietää miksi säätö vaikuttaa siihen mihin se vaikuttaa.</p>
+  </header>
+
+  <div id="start-screen" class="start-card">
+    <p style="margin-top:0;">20 kysymystä, vastausjärjestys arvotaan joka kerta. Jokaisen vastauksen jälkeen näet heti selityksen ja lähteen — myös silloin kun vastaus on oikein, koska oikea lopputulos väärällä syyllä on yleisin virhe tässä.</p>
+    <button class="primary" onclick="startQuiz()">Aloita koe</button>
+  </div>
+
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">1 / 20</div>
+    </div>
+
+    <div class="card">
+      <span class="evidence-badge" id="evidence-badge">vahva</span>
+      <p class="question-text" id="question-text"></p>
+      <div class="options" id="options-container"></div>
+
+      <div class="feedback hidden" id="feedback">
+        <p class="feedback-verdict" id="feedback-verdict"></p>
+        <p class="feedback-text" id="feedback-text"></p>
+        <p class="feedback-source" id="feedback-source"></p>
+      </div>
+
+      <div class="next-row hidden" id="next-row">
+        <button class="primary" onclick="nextQuestion()" id="next-btn">Seuraava kysymys</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="end-screen" class="end-card hidden">
+    <div class="score-big" id="score-big"></div>
+    <div class="score-sub" id="score-sub"></div>
+    <div id="review-list"></div>
+    <div class="next-row" style="margin-top:28px;">
+      <button class="primary" onclick="restartQuiz()">Aloita alusta</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "Miksi hekin (takaharuksen) kiristäminen kiristää samalla keulaharusta, vaikka ne eivät ole suoraan kytköksissä toisiinsa?",
+    options: [
+      "Hekki vetää maston yläosaa taaksepäin, jolloin keulaharuksen kiinnityskohta siirtyy taaksepäin ja etäisyys kanteen kasvaa, mikä kiristää harusta.",
+      "Hekki on kytketty keulaharukseen kannen alla kulkevalla taljalla, joka siirtää vetovoiman suoraan haruksen kireyteen.",
+      "Hekin kiristys nostaa koko mastoa hieman ylöspäin mastoaukossa, mikä kiristää samalla kaiken seisovan takilan tasaisesti.",
+      "Hekki lisää maston sivuttaista jäykkyyttä saalinkien kautta, mikä välillisesti kasvattaa myös keulaharuksen kireyttä purjehdittaessa."
+    ],
+    correct: 0,
+    explanation: "Hekki ja keulaharus ovat molemmat kiinni maston yläosassa, mutta vastakkaisilla puolilla. Kun hekki vetää maston huippua taaksepäin, keulaharuksen kiinnityspisteen ja kannen välinen etäisyys pienenee vain geometrisesti — harus kiristyy ilman että se on mekaanisesti kytketty hekkiin.",
+    source: "North Sails: \"When the backstay is tightened... there is less forestay sag\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi fokan liiallinen etuliikin (luff) kireys heikentää nimenomaan purjeen yläosan tehokkuutta?",
+    options: [
+      "Liiallinen kireys vähentää purjeen luontaista kiertymistä (twistiä), ja vähempi kiertymä heikentää suoraan purjeen yläosan virtausta ja tehokkuutta.",
+      "Etuliikin kiristys siirtää purjeen syvimmän kohdan aina liian kauas taaksepäin, mikä turmelee koko purjeen profiilin yläosasta alkaen.",
+      "Kireä etuliikki venyttää purjekangasta pysyvästi vinoon kuitusuunnasta poispäin, mikä heikentää kankaan kestävyyttä erityisesti yläosassa.",
+      "Etuliikin kireys vaikuttaa ainoastaan purjeen alaosan pussin syvyyteen eikä ulotu vaikutukseltaan lainkaan purjeen yläosaan asti."
+    ],
+    correct: 0,
+    explanation: "Kireä etuliikki jäykistää koko purjeen profiilia ja rajoittaa sen luontaista kiertymistä. Vähempi kiertymä tarkoittaa, ettei purje pääse avautumaan yläosastaan tuulen mukana, jolloin yläosan virtaus heikkenee. Syvyyden siirtyminen taaksepäin on eri ilmiö — se on korjauskeino, jota tarvitaan vain jos syvin kohta on jo valunut taakse kovassa tuulessa, ei yleinen syy tehokkuuden heikkenemiselle.",
+    source: "Heikkilä Sailmaker: \"Liika kireys vähentää purjeen kiertymistä ja se vuorostaan alentaa yläosan tehokkuutta\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi puomiliikin kiristäminen litistää purjeen juuri alaosasta, ei koko purjeesta tasaisesti?",
+    options: [
+      "Puomiliikin kiinnityskohdat ovat purjeen ja puomin alareunassa, joten sen venytysvoima kohdistuu paikallisesti sinne eikä etene purjeessa ylöspäin.",
+      "Puomiliikki ja cunningham ovat käytännössä sama säätö, joita vain kutsutaan eri veneissä ja purjelajeissa eri nimillä.",
+      "Puomiliikin kiristys vaikuttaa tasaisesti koko purjeen pinta-alaan, koska voima jakautuu kankaan kudoksen kautta joka suuntaan.",
+      "Puomiliikki säätää ensisijaisesti purjeen kiertymää (twistiä) mastossa ylhäällä, ei niinkään pussin syvyyttä purjeen alaosassa."
+    ],
+    correct: 0,
+    explanation: "Puomiliikki venyttää purjeen alareunaa vaakasuunnassa puomia pitkin. Voima ei etene purjekankaassa merkittävästi ylöspäin, joten vaikutus rajoittuu alaosan pussin syvyyteen. Tämä on eri mekanismi kuin cunningham, joka venyttää etuliikkiä pystysuunnassa mastoa pitkin.",
+    source: "Heikkilä Sailmaker: \"Mitä kireämpi puomiliikki, sitä litteämpi purjeen alaosa\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi cunninghamin kiristäminen siirtää purjeen syvimmän kohdan eteenpäin, kun taas puomiliikki ei tee sitä?",
+    options: [
+      "Cunningham venyttää etuliikkiä pystysuunnassa mastoa pitkin ja siirtää koko purjeen pussin sijaintia eteenpäin, kun puomiliikki venyttää vain alareunaa vaakasuunnassa.",
+      "Cunningham ja puomiliikki ovat teknisesti sama köysijärjestelmä, jota kutsutaan eri nimillä riippuen siitä missä veneluokassa purjehditaan.",
+      "Cunningham vaikuttaa yksinomaan purjeen yläosan kiertymään, puomiliikki yksinomaan alaosaan, eivätkä ne koskaan vaikuta samaan ominaisuuteen.",
+      "Cunninghamin kiristäminen pienentää purjeen kokonaispinta-alaa, mikä siirtää koko purjeen painopistettä eteenpäin veneen keulaa kohti."
+    ],
+    correct: 0,
+    explanation: "Cunningham ja puomiliikki venyttävät purjetta eri suuntiin: cunningham pystysuunnassa mastoa pitkin, puomiliikki vaakasuunnassa puomia pitkin. Siksi niillä on eri vaikutus purjeen muotoon, vaikka molemmat 'litistävät' purjetta jollain tavalla — cunningham siirtää syvyyden sijaintia, puomiliikki muuttaa syvyyden määrää alhaalla.",
+    source: "Heikkilä Sailmaker: \"Cunningham siirtää purjeen pussia lähemmäs mastoa\"",
+    evidence: "perusteltu"
+  },
+  {
+    q: "Miksi hekin kiristäminen kovalla tuulella vähentää venettä kaatavaa voimaa, vaikka hekki ei suoraan liikuta puomia sivusuunnassa?",
+    options: [
+      "Hekki avaa isopurjeen takaliikkiä ja kiertää purjeen yläosaa, jolloin tuuli pääsee läpi juuri sieltä missä vipuvarsi kallistukseen on pisin.",
+      "Hekin kiristäminen siirtää veneen painopisteen alemmas runkoon, mikä suoraan pienentää kallistavaa momenttia kovassa tuulessa.",
+      "Hekin kiristyminen pienentää isopurjeen kokonaispinta-alaa mekaanisesti, jolloin vähemmän purjepintaa jää tuulen kaatovoiman alaiseksi.",
+      "Hekin kiristäminen kiristää samalla fokkaa niin paljon, että isopurjeen kuorma vähenee fokan ottaessa suuremman osan voimasta."
+    ],
+    correct: 0,
+    explanation: "Purjeen yläosassa vipuvarsi vedenrajasta on pisin, joten sielläkin syntyvä voima kallistaa venettä eniten. Hekki avaa takaliikkiä ja kiertää juuri yläosaa, päästäen tuulta läpi kohdasta jossa sillä on suurin vaikutus kallistukseen.",
+    source: "HSK-trimmiklinikka: \"Silloin ala kiristää hekkiä voimakkaasti, jotta saat painetta pois isopurjeesta\"",
+    evidence: "perusteltu"
+  },
+  {
+    q: "Miksi hekki ei pysty korjaamaan maston yläpään sivuttaista poikkeamaa keskilinjalta, vaikka se vaikuttaa maston taipumaan?",
+    options: [
+      "Hekki kulkee veneen keskilinjan suunnassa perästä mastoon, joten sen vetovoimalla ei ole lainkaan sivuttaista komponenttia mastoon nähden.",
+      "Hekin vaijeri on rakenteellisesti liian ohut kestämään sivuttaisia voimia, vaikka se pystyisi teoriassa siirtämään mastoa sivulle.",
+      "Maston sivuttainen poikkeama korjataan aina yksinomaan mastonjalan sijaintia siirtämällä, eikä millään seisovan takilan osalla ole siihen vaikutusta.",
+      "Hekki vaikuttaa ainoastaan purjeen muotoon takaliikin kautta eikä sillä ole minkäänlaista fyysistä vaikutusta itse mastoon."
+    ],
+    correct: 0,
+    explanation: "Hekki kulkee veneen keskilinjan suunnassa perästä mastoon, joten sen vetovoima toimii vain etu-taka-suunnassa. Maston sivuttainen asema määräytyy vanttien ja saalinkien geometrian kautta — nämä ovat ainoat säädöt, joilla on sivuttaiskomponenttia.",
+    source: "Rakenteellinen periaate (vanttien ja saalinkien geometria vs. hekin suunta)",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi viuluvantit pidetään löysällä sekä kevyellä että kovalla tuulella, ja kiristetään vain keskituulessa?",
+    options: [
+      "Kevyellä tuulella masto tarvitsee joustaa pieneenkin paineeseen, ja kovalla tuulella hekin pitää päästä kiertämään yläosaa vapaasti ilman viulujen vastusta.",
+      "Viulujen köysimateriaali reagoi eri tavalla lämpötilaan riippuen tuulen voimakkuudesta, mikä pakottaa säätämään kireyttä molemmissa ääripäissä.",
+      "Kovalla tuulella viulut eivät enää kestäisi kuormaa kireällä, joten ne on pakko löysätä rakenteen suojaamiseksi rikkoutumiselta.",
+      "Kevyellä tuulella viulut eivät vaikuta purjeen muotoon lainkaan, ja kovalla tuulella ne vaikuttavat vain isopurjeen alaosaan."
+    ],
+    correct: 0,
+    explanation: "Kummassakin ääripäässä syy on eri, mutta lopputulos sama: kevyellä tuulella masto tarvitsee joustaa vähäisenkin paineen mukaan, kovalla tuulella hekin pitää saada vapaasti avata ja kiertää maston yläosaa. Keskituulessa viulut kiristetään, jotta miehistön paino riittää pitämään veneen hyvässä nousukulmassa.",
+    source: "North Sails / HSK-trimmiklinikka: \"Jumpers are set relatively loose in light winds and strong winds\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi kickingstrap pidetään kireällä myös lenssillä, vaikka pääskuutti on silloin löysällä?",
+    options: [
+      "Kun pääskuutti on löysällä lenssillä, mikään muu ei estä puomia nousemasta, joten kick pitää puomin alhaalla ja yläosan kiertymän hallinnassa.",
+      "Kick estää puomin liikkumisen sivusuunnassa laidalta toiselle, mikä on tärkeintä nimenomaan myötätuulessa jiipin aikana.",
+      "Kickin kiristäminen lenssillä lisää purjeen kokonaispinta-alaa hetkellisesti, mikä selittää sen käytön myötätuulessa vauhdin lisäämiseksi.",
+      "Kickiä pidetään kireällä lenssillä pääasiassa siksi, että se helpottaa puomin nostamista jiipin yhteydessä turvallisesti."
+    ],
+    correct: 0,
+    explanation: "Kryssillä puomin asemaa hallitsee osittain skuutti, mutta lenssillä skuutti on löysällä eikä enää rajoita puomin nousua. Ilman kickiä puomi nousisi ja takaliikki avautuisi hallitsemattomasti, jolloin ylin latta ei pysyisi puomin suuntaisena.",
+    source: "North Sails: \"Downwind the kickingstrap is trimmed so that the top batten is parallel to the boom\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi masto painetaan enemmän taakse mastoaukon reunaa vasten kevyellä tuulella (22mm) kuin kovalla tuulella (10mm)?",
+    options: [
+      "Kevyellä tuulella purjekuorma on pieni, joten taipuma pitää tuottaa enemmän mekaanisella esiasetuksella, kun taas kovalla tuulella purjekuorma taivuttaa mastoa jo itsessään.",
+      "Kovalla tuulella masto pysyy aina täysin suorassa mastonjalan asennosta riippumatta, joten säätöä ei tarvita ollenkaan.",
+      "Kevyellä tuulella masto ei saa taipua ollenkaan, joten se lukitaan mahdollisimman tiukasti kiinni mastoaukon reunaan.",
+      "Mastonjalan kitka mastoaukossa kasvaa kevyellä tuulella ilmankosteuden vuoksi, mikä vaatii suuremman mekaanisen siirron jalkaa."
+    ],
+    correct: 0,
+    explanation: "Maston taipuma syntyy sekä mastonjalan mekaanisesta asetuksesta että purjeisiin kohdistuvasta tuulikuormasta. Kevyellä tuulella kuormaa on vähän, joten suurempi osa tarvittavasta taipumasta pitää tuottaa mekaanisesti. Kovalla tuulella purjekuorma itsessään taivuttaa mastoa voimakkaasti, joten vähemmän esiasetusta riittää.",
+    source: "North Sails: \"In light winds... pressed 22 mm aft... in strong winds 10 mm astern\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi levankivaunun tuominen tuuleen päin samaan aikaan kun skuuttia löysätään avaa isopurjeen takaliikkiä ilman että puomin kulma keskilinjaan muuttuu?",
+    options: [
+      "Levangin siirto tuuleen päin kompensoi skuutin löysäämisestä syntyvän puomin liikkeen leehen, jolloin puomin kulma säilyy mutta takaliikki pääsee avautumaan.",
+      "Levangin siirto ei vaikuta puomin kulmaan lainkaan, ainoastaan skuutin köyden kokonaispituuteen puomin ja kannen välillä.",
+      "Levangin siirto tuuleen päin kiristää samalla automaattisesti hekkiä, mikä yhdessä avaa isopurjeen takaliikkiä tehokkaasti.",
+      "Levangin ja skuutin säädöt toimivat toisistaan täysin riippumatta, eikä niillä ole yhteisvaikutusta purjeen takaliikin avautumiseen."
+    ],
+    correct: 0,
+    explanation: "Skuutti ja levanki vaikuttavat yhdessä puomin kulmaan ja kiristykseen. Kun skuuttia löysätään yksin, puomi karkaisi leeseen. Tuomalla levankivaunua samalla tuuleen päin puomin kulma keskilinjaan pysyy, mutta skuutin vetosuunta muuttuu loivemmaksi, mikä sallii takaliikin avautua.",
+    source: "HSK-trimmiklinikka: \"Avaaminen tapahtuu löysäämällä skuuttia, kun samalla levankivaunua tuodaan tuuleen päin\"",
+    evidence: "perusteltu"
+  },
+  {
+    q: "Elvströmin ohjeen mukaan mastoa kallistetaan hieman eteenpäin lenssillä asettamalla miehistöä keulaan ja löysäämällä hekkiä. Miksi juuri tämä yhdistelmä kallistaa mastoa eteen?",
+    options: [
+      "Miehistön paino keulassa muuttaa koko rungon ja mastonjalan kulmaa, ja löysä hekki poistaa esteen joka muuten pitäisi mastoa pystyssä tai takakenossa.",
+      "Hekin löysääminen yksinään riittää kallistamaan maston eteenpäin ilman että miehistön painon sijaintia tarvitsee muuttaa lainkaan.",
+      "Miehistön paino keulassa vaikuttaa ainoastaan veneen nopeuteen aallokossa, ei mitenkään itse maston kulmaan veneeseen nähden.",
+      "Mastoa ei voida koskaan kallistaa eteenpäin missään olosuhteissa, ainoastaan taaksepäin hekkiä kiristämällä kryssillä."
+    ],
+    correct: 0,
+    explanation: "Kaksi tekijää toimivat yhdessä: veneen trimmi muuttaa koko rungon ja siten mastonjalan kulmaa, ja löysä hekki ei enää vedä maston yläosaa taaksepäin vastustamaan tätä muutosta. Kumpikaan tekijä yksinään ei tuota samaa lopputulosta yhtä tehokkaasti kuin yhdistelmä.",
+    source: "Paul Elvström: \"On the lee... you can place a man on the foredeck and slacken the stern stay\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi fokan skuuttipisteen paikkaa siirretään eteenpäin aallokkoisessa merenkäynnissä, vaikka tuulen voimakkuus pysyisi samana?",
+    options: [
+      "Skuuttipisteen siirto eteen lisää purjeen pussia ja vetovoimaa, joita tarvitaan työntymään aaltojen läpi, joten säätö reagoi merenkäyntiin eikä tuulen voimakkuuteen.",
+      "Skuuttipisteen siirto eteen pienentää purjeen kokonaispinta-alaa, mikä helpottaa veneen ohjaamista aallokkoisessa merenkäynnissä huomattavasti.",
+      "Skuuttipisteen siirto eteen on tarpeen ainoastaan silloin kun tuuli on erittäin kevyt, ei aallokon vuoksi lainkaan.",
+      "Skuuttipisteen siirto eteen kiristää samalla automaattisesti fokan etuliikkiä, mikä selittää sen käytön aallokkoisissa olosuhteissa."
+    ],
+    correct: 0,
+    explanation: "Skuuttipisteen paikka säätää sekä purjeen pussin kokoa että kiertymää. Aallokossa vene tarvitsee enemmän vetovoimaa jaksaakseen aaltojen läpi, vaikka tuuli itsessään ei olisi lisääntynyt — siksi säätöä tehdään merenkäynnin, ei pelkän tuulen voimakkuuden perusteella.",
+    source: "North Sails: \"If the sea is lumpy, move the jib lead two to three holes forward to get more draft and power\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi levangin tuominen tuuleen (15-20 cm) kevyellä tuulella auttaa pitämään takaliikin auki, vaikka puomi pysyy silti lähellä keskilinjaa?",
+    options: [
+      "Levangin tuominen tuuleen antaa pitää puomin lähellä keskilinjaa ilman että skuuttia tarvitsee kiristää, jolloin takaliikki pysyy auki ja liehu virtaa suorassa.",
+      "Levangin tuominen tuuleen vähentää maston taipumaa kevyellä tuulella huomattavasti, mikä pitää purjeen syvyyden automaattisesti oikeana.",
+      "Levangin tuominen tuuleen siirtää veneen painopisteen taaemmas runkoon, mikä parantaa nousukykyä erityisesti kevyessä tuulessa.",
+      "Levangin tuominen tuuleen kiristää fokkaa samalla verran, mikä tasapainottaa purjeiden yhteisvaikutuksen kevyessä tuulessa."
+    ],
+    correct: 0,
+    explanation: "Puomin asemaan vaikuttavat yhdessä levanki ja skuutti. Tuomalla levankivaunun tuuleen puomi pysyy lähellä keskilinjaa ilman että skuuttia pitää kiristää — kevyt skuuttiveto pitää takaliikin auki, jolloin ylin liehu virtaa suoraan taaksepäin eikä purje sula liikaa kiinni.",
+    source: "North Sails: \"In light winds (0-6 knots) pull the traveller cars 15-20 cm to windward\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi fokan fallin (nostoliinan) liiallinen kiristys siirtää purjeen syvimmän kohdan liian pitkälle eteenpäin?",
+    options: [
+      "Falli venyttää etuliikkiä pystysuunnassa keulaharusta pitkin, ja liika venytys vetää kangasta eteenpäin liikin suunnassa, jolloin pussin syvin kohta siirtyy lähemmäs etureunaa.",
+      "Falli säätää ensisijaisesti purjeen kokonaispinta-alaa, jonka pienentyminen liiallisen kiristyksen myötä siirtää pussin sijaintia eteenpäin.",
+      "Falli vaikuttaa ainoastaan purjeen alaosan muotoon lähellä kantta, ei fokan yläosan muotoon juuri lainkaan.",
+      "Falli kiristyy automaattisesti fokan skuutin mukana purjehdittaessa, mikä siirtää pussin sijaintia eteenpäin epäsuorasti."
+    ],
+    correct: 0,
+    explanation: "Fokka on kiinnitetty keulaharukseen, ei mastoon, joten falli venyttää etuliikkiä pystysuunnassa juuri keulaharusta pitkin. Liika venytys vetää kangasta eteenpäin liikin suuntaan, mikä siirtää purjeen pussin syvimmän kohdan lähemmäs etureunaa — sama periaate kuin cunninghamilla isopurjeessa, mutta eri kiinnitysrakenteen kautta.",
+    source: "North Sails: \"Never pull the halyard too tight. This will cause the draft of the jib to move too far forward\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi cunninghamia kiristetään voimakkaasti vasta kun tuuli ylittää noin 15 solmua?",
+    options: [
+      "Kovassa tuulessa masto taipuu voimakkaasti ja pussi pyrkii siirtymään taakse; kova cunningham-veto pitää syvyyden edessä ja avaa samalla takaliikkiä ylälaidasta.",
+      "Kovassa tuulessa purjekangas venyy niin paljon, että cunninghamin kova veto korvaa koko kankaan kutistumisen kompensoinnin.",
+      "Kovassa tuulessa cunninghamin kova kiristys korvaa hekin tarpeen kokonaan, joten hekkiä ei enää tarvitse käyttää lainkaan.",
+      "Kovassa tuulessa cunninghamin kova kiristys estää ensisijaisesti purjekankaan repeämisen suuren tuulenpaineen alla."
+    ],
+    correct: 0,
+    explanation: "Kovassa tuulessa masto taipuu voimakkaasti, mikä pyrkii siirtämään purjeen syvimmän kohdan taaksepäin. Kova cunningham-veto pitää syvyyden edessä ja avaa samalla purjeen yläosaa, mikä latistaa sitä hallitusti juuri silloin kun ylimääräinen voima pitää päästää pois.",
+    source: "North Sails: \"When the wind exceeds 15 knots it is pulled hard to open the leech and keep the draft forward\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi puomiliikki pidetään löysempänä kevyessä tuulessa ja kiristetään täysin kovaan tuuleen mennessä?",
+    options: [
+      "Kevyessä tuulessa purjeen alaosaan tarvitaan enemmän syvyyttä ja voimaa vähäisen tuulivoiman kompensoimiseksi, kun taas kovassa tuulessa liika syvyys lisäisi vain vastusta.",
+      "Kevyessä tuulessa löysä puomiliikki estää puomin taipumisen kokonaan, kun taas kovassa tuulessa taipuma ei enää haittaa.",
+      "Kevyessä tuulessa löysä puomiliikki pitää puomin painon tasapainossa, kun taas kovassa tuulessa puomin paino ei enää vaikuta mihinkään.",
+      "Kevyessä tuulessa löysä puomiliikki vähentää kitkaa puomin urassa, kun taas kovassa tuulessa kitka ei enää haittaa purjetta."
+    ],
+    correct: 0,
+    explanation: "Kevyessä tuulessa tuulivoimaa on niukasti, joten purjeen alaosaan halutaan enemmän syvyyttä ja siten voimaa. Kovassa tuulessa voimaa on jo riittävästi tai liikaakin, jolloin liika syvyys vain lisäisi vastusta ja kaatavaa voimaa — siksi purje litistetään kiristämällä.",
+    source: "Yleinen periaate, toistuu North Sailsin ja Heikkilän ohjeissa outhaul/puomiliikki-kohdissa",
+    evidence: "perusteltu"
+  },
+  {
+    q: "Miksi kireä skuuttaus parantaa isopurjeen nousukykyä mutta lisää samalla peräsimen painetta?",
+    options: [
+      "Kireä skuutti sulkee takaliikkiä ja kääntää purjeen tehokkaammin tuulta vasten, mutta lisää samalla purjeen sivuttaisvoimaa keulan puolella, mikä vaatii enemmän peräsinkorjausta.",
+      "Kireä skuutti pienentää purjeen kokonaispinta-alaa, mikä suoraan vähentää peräsimen tarvitsemaa voimaa noustessa tuulta vasten.",
+      "Kireä skuutti siirtää veneen painopisteen perään runkoon, mikä automaattisesti parantaa nousukykyä ilman muita vaikutuksia.",
+      "Kireä skuutti vaikuttaa yksinomaan fokkaan eikä isopurjeeseen lainkaan, joten peräsimen paine johtuu kokonaan fokan säädöstä."
+    ],
+    correct: 0,
+    explanation: "Kireä skuutti sulkee takaliikkiä, mikä kääntää purjeen tehokkaammin tuulen suuntaan ja parantaa nousua. Sama sulkeutunut takaliikki kuitenkin kasvattaa purjeen sivuttaista voimaa, joka vaatii enemmän peräsinkorjausta veneen pitämiseksi kurssilla.",
+    source: "North Sails: \"If the mainsheet is sheeted tight, the leech will close and put more pressure on the rudder\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi aallokossa kannattaa sallia isopurjeen takaliikin kiertyä enemmän kuin tasaisella vedellä?",
+    options: [
+      "Enemmän kiertymää antaa veneelle leveämmän ohjauskulman, jolloin perämies voi ohjata aaltojen mukaan ilman että purje pysähtyy, mikä lisää vauhtia ja nousua.",
+      "Enemmän kiertymää vähentää purjeen kokonaisvoimaa huomattavasti, mikä helpottaa veneen ohjaamista aallokkoisessa merenkäynnissä.",
+      "Enemmän kiertymää pienentää purjeen tehollista pinta-alaa, mikä vakauttaa venettä sivuttaisliikkeeltä aallokossa merkittävästi.",
+      "Enemmän kiertymää siirtää purjeen painopisteen alemmas rakenteessa, mikä vähentää veneen keinumista aallokkoisilla vesillä."
+    ],
+    correct: 0,
+    explanation: "Aallokossa vene tarvitsee enemmän liikkumavaraa ohjaamiseen aaltojen mukaan. Enemmän kiertymää takaliikissä sallii perämiehen ohjata leveämmällä kulmalla ilman että purje pysähtyy joka aallolla, mikä pitää yllä vauhtia ja sitä kautta myös nousukykyä.",
+    source: "North Sails: \"In large waves, let the leech twist a little more to have a wider steering angle\"",
+    evidence: "vahva"
+  },
+  {
+    q: "Miksi fokan trimmin perussääntönä pidetään, että suojan puolen virtauslanka lentää tasaisesti taaksepäin, mutta tuulen puolen lanka saa lepattaa hieman?",
+    options: [
+      "Purjeen suojan puoli tuottaa imupuolena suurimman osan nostovoimasta, joten sen virtauksen pitää pysyä kiinni purjeessa; tuulen puolen paine-puoli sietää pientä irtoamista ilman suurta voiman menetystä.",
+      "Suojan puolen lanka reagoi tuuleen aina nopeammin kuin tuulen puolen lanka, joten sitä on käytännössä helpompi tulkita jatkuvasti purjehdittaessa.",
+      "Tuulen puolen lanka on rakenteeltaan epäluotettavampi kuin suojan puolen lanka, joten sen lepatusta ei oteta huomioon trimmissä lainkaan.",
+      "Suojan puolen virtaus vaikuttaa ainoastaan veneen nopeuteen ja tuulen puolen virtaus ainoastaan nousukykyyn, eivätkä ne liity toisiinsa mitenkään."
+    ],
+    correct: 0,
+    explanation: "Suojan puoli on purjeen imupuoli, jossa suurin osa nostovoimasta syntyy — siksi virtauksen pitää pysyä kiinni kankaassa juuri siellä. Tuulen puoli on paine-puoli, jolla pieni virtauksen irtoaminen ei vielä merkittävästi heikennä kokonaisvoimaa, joten hienoinen lepatus siellä on normaalia eikä virhe.",
+    source: "Heikkilä Sailmaker: \"suojan puolen lanka tulee olla kiinni purjeessa ja tuulen puolen lanka hiukan lerppuna\"",
+    evidence: "perusteltu"
+  },
+  {
+    q: "Miksi fokan skuuttipisteen oikea paikka näkyy siitä, että etuliikin virtauslangat irtoavat (luffaavat) samaan aikaan sekä purjeen ylä- että alaosassa?",
+    options: [
+      "Skuuttipisteen paikka määrää kuinka tasaisesti skuuttivoima jakautuu purjeen korkeussuunnassa; oikealla paikalla purjeen kulma tuuleen on sama koko korkeudella, jolloin etuliikki irtoaa samanaikaisesti ylhäällä ja alhaalla.",
+      "Etuliikin virtauslangat irtoavat aina ensin purjeen alaosasta riippumatta skuuttipisteen paikasta, joten samanaikaisuus ei kerro säädöstä mitään.",
+      "Skuuttipisteen paikka vaikuttaa vain purjeen kokonaispinta-alaan, jolloin virtauslankojen samanaikainen irtoaminen on sattumaa eikä säädön tulosta.",
+      "Virtauslankojen samanaikainen irtoaminen ylhäällä ja alhaalla kertoo ainoastaan sen hetkisestä tuulen nopeudesta, ei skuuttipisteen paikasta lainkaan."
+    ],
+    correct: 0,
+    explanation: "Jos skuuttipiste on väärässä kohdassa, purjeen kulma tuuleen nähden vaihtelee korkeuden mukaan — esimerkiksi yläosa on kireämpi kuin alaosa tai päinvastoin. Tällöin etuliikki irtoaa eri korkeuksilla eri aikaan. Oikea skuuttipiste jakaa skuuttivoiman niin, että kulma pysyy samana koko korkeudella, jolloin koko etuliikki irtoaa yhtä aikaa.",
+    source: "North Sails: \"The jib shall luff evenly, i.e. tell-tales must fly at the same time in top and bottom\"",
+    evidence: "vahva"
+  }
+];
+
+let order = [];
+let current = 0;
+let score = 0;
+let answers = [];
+let currentShuffledOptions = [];
+let currentCorrectIndex = -1;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(){
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const item = QUESTIONS[current];
+
+  document.getElementById('progress-label').textContent = (current+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progress-fill').style.width = ((current)/QUESTIONS.length*100) + '%';
+
+  const badge = document.getElementById('evidence-badge');
+  badge.textContent = item.evidence;
+  badge.className = 'evidence-badge' + (item.evidence === 'avoin hypoteesi' ? ' avoin' : '');
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const indices = shuffle([0,1,2,3]);
+  currentShuffledOptions = indices.map(i => item.options[i]);
+  currentCorrectIndex = indices.indexOf(item.correct);
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  currentShuffledOptions.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(idx);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-row').classList.add('hidden');
+  document.getElementById('next-btn').textContent =
+    (current === QUESTIONS.length - 1) ? 'Näytä tulos' : 'Seuraava kysymys';
+}
+
+function selectAnswer(idx){
+  const item = QUESTIONS[current];
+  const isCorrect = idx === currentCorrectIndex;
+  const buttons = document.querySelectorAll('.option');
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if(i === currentCorrectIndex){ btn.classList.add('reveal-correct'); }
+    if(i === idx && !isCorrect){ btn.classList.add('wrong-pick'); }
+    if(i === idx && isCorrect){ btn.classList.add('correct-pick'); }
+  });
+
+  const verdict = document.getElementById('feedback-verdict');
+  verdict.textContent = isCorrect ? 'Oikein' : 'Ei aivan';
+  verdict.className = 'feedback-verdict ' + (isCorrect ? 'good' : 'bad');
+
+  document.getElementById('feedback-text').textContent = item.explanation;
+  document.getElementById('feedback-source').textContent = 'Lähde: ' + item.source;
+
+  document.getElementById('feedback').classList.remove('hidden');
+  document.getElementById('next-row').classList.remove('hidden');
+
+  answers.push({ question: item.q, correct: isCorrect, explanation: item.explanation });
+  if(isCorrect) score++;
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= QUESTIONS.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+
+  document.getElementById('score-big').textContent = score + ' / ' + QUESTIONS.length;
+  document.getElementById('score-sub').textContent =
+    score === QUESTIONS.length ? 'Kaikki mekanismit istuvat.' : 'Käy läpi mekanismit, jotka jäivät vielä auki.';
+
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  answers.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    const tag = document.createElement('div');
+    tag.className = 'review-tag ' + (a.correct ? 'ok' : 'miss');
+    tag.textContent = a.correct ? 'OIKEIN' : 'TARKISTA';
+    const q = document.createElement('p');
+    q.className = 'review-q';
+    q.textContent = (i+1) + '. ' + a.question;
+    const t = document.createElement('p');
+    t.className = 'review-text';
+    t.textContent = a.explanation;
+    div.appendChild(tag); div.appendChild(q); div.appendChild(t);
+    list.appendChild(div);
+  });
+}
+
+function restartQuiz(){
+  current = 0;
+  score = 0;
+  answers = [];
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
