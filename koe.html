@@ -185,14 +185,14 @@
   </header>
 
   <div id="start-screen" class="start-card">
-    <p style="margin-top:0;">20 kysymystä, vastausjärjestys arvotaan joka kerta. Jokaisen vastauksen jälkeen näet heti selityksen ja lähteen — myös silloin kun vastaus on oikein, koska oikea lopputulos väärällä syyllä on yleisin virhe tässä.</p>
+    <p style="margin-top:0;">21 kysymystä, vastausjärjestys arvotaan joka kerta. Jokaisen vastauksen jälkeen näet heti selityksen ja lähteen — myös silloin kun vastaus on oikein, koska oikea lopputulos väärällä syyllä on yleisin virhe tässä.</p>
     <button class="primary" onclick="startQuiz()">Aloita koe</button>
   </div>
 
   <div id="quiz-screen" class="hidden">
     <div class="progress-row">
       <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-      <div class="progress-label" id="progress-label">1 / 20</div>
+      <div class="progress-label" id="progress-label">1 / 21</div>
     </div>
 
     <div class="card">
@@ -241,7 +241,7 @@ const QUESTIONS = [
   {
     q: "Miksi fokan liiallinen etuliikin (luff) kireys heikentää nimenomaan purjeen yläosan tehokkuutta?",
     options: [
-      "Liiallinen kireys vähentää purjeen luontaista kiertymistä (twistiä), ja vähempi kiertymä heikentää suoraan purjeen yläosan virtausta ja tehokkuutta.",
+      "Kireä etuliikki rajoittaa purjeen luontaista kiertymistä (twistiä), jolloin purje ei pääse avautumaan ylätuulen mukana ja ilmavirta irtoaa herkemmin juuri ylälaidassa.",
       "Etuliikin kiristys siirtää purjeen syvimmän kohdan aina liian kauas taaksepäin, mikä turmelee koko purjeen profiilin yläosasta alkaen.",
       "Kireä etuliikki venyttää purjekangasta pysyvästi vinoon kuitusuunnasta poispäin, mikä heikentää kankaan kestävyyttä erityisesti yläosassa.",
       "Etuliikin kireys vaikuttaa ainoastaan purjeen alaosan pussin syvyyteen eikä ulotu vaikutukseltaan lainkaan purjeen yläosaan asti."
@@ -254,7 +254,7 @@ const QUESTIONS = [
   {
     q: "Miksi puomiliikin kiristäminen litistää purjeen juuri alaosasta, ei koko purjeesta tasaisesti?",
     options: [
-      "Puomiliikin kiinnityskohdat ovat purjeen ja puomin alareunassa, joten sen venytysvoima kohdistuu paikallisesti sinne eikä etene purjeessa ylöspäin.",
+      "Puomiliikin kiinnityskohta sijaitsee purjeen ja puomin alakulmassa, joten venytysvoima jää rajatulle alueelle sen sijaan että se leviäisi kankaan läpi purjeen muihin osiin.",
       "Puomiliikki ja cunningham ovat käytännössä sama säätö, joita vain kutsutaan eri veneissä ja purjelajeissa eri nimillä.",
       "Puomiliikin kiristys vaikuttaa tasaisesti koko purjeen pinta-alaan, koska voima jakautuu kankaan kudoksen kautta joka suuntaan.",
       "Puomiliikki säätää ensisijaisesti purjeen kiertymää (twistiä) mastossa ylhäällä, ei niinkään pussin syvyyttä purjeen alaosassa."
@@ -384,7 +384,7 @@ const QUESTIONS = [
   {
     q: "Miksi levangin tuominen tuuleen (15-20 cm) kevyellä tuulella auttaa pitämään takaliikin auki, vaikka puomi pysyy silti lähellä keskilinjaa?",
     options: [
-      "Levangin tuominen tuuleen antaa pitää puomin lähellä keskilinjaa ilman että skuuttia tarvitsee kiristää, jolloin takaliikki pysyy auki ja liehu virtaa suorassa.",
+      "Levangin siirto vaunussa korvaa voiman, joka muuten pitäisi tuottaa kiristämällä skuuttia; puomin kulma pysyy samana mutta köyden veto jää kevyeksi, jolloin ylin virtauslanka ei sulkeudu kiinni purjeeseen.",
       "Levangin tuominen tuuleen vähentää maston taipumaa kevyellä tuulella huomattavasti, mikä pitää purjeen syvyyden automaattisesti oikeana.",
       "Levangin tuominen tuuleen siirtää veneen painopisteen taaemmas runkoon, mikä parantaa nousukykyä erityisesti kevyessä tuulessa.",
       "Levangin tuominen tuuleen kiristää fokkaa samalla verran, mikä tasapainottaa purjeiden yhteisvaikutuksen kevyessä tuulessa."
@@ -395,7 +395,7 @@ const QUESTIONS = [
     evidence: "vahva"
   },
   {
-    q: "Miksi fokan fallin (nostoliinan) liiallinen kiristys siirtää purjeen syvimmän kohdan liian pitkälle eteenpäin?",
+    q: "Miksi fokan fallin (nostimen) liiallinen kiristys siirtää purjeen syvimmän kohdan liian pitkälle eteenpäin?",
     options: [
       "Falli venyttää etuliikkiä pystysuunnassa keulaharusta pitkin, ja liika venytys vetää kangasta eteenpäin liikin suunnassa, jolloin pussin syvin kohta siirtyy lähemmäs etureunaa.",
       "Falli säätää ensisijaisesti purjeen kokonaispinta-alaa, jonka pienentyminen liiallisen kiristyksen myötä siirtää pussin sijaintia eteenpäin.",
@@ -434,7 +434,7 @@ const QUESTIONS = [
     evidence: "perusteltu"
   },
   {
-    q: "Miksi kireä skuuttaus parantaa isopurjeen nousukykyä mutta lisää samalla peräsimen painetta?",
+    q: "Miksi isopurjeen kireä skuuttaus parantaa nousukykyä mutta lisää samalla peräsimen painetta?",
     options: [
       "Kireä skuutti sulkee takaliikkiä ja kääntää purjeen tehokkaammin tuulta vasten, mutta lisää samalla purjeen sivuttaisvoimaa keulan puolella, mikä vaatii enemmän peräsinkorjausta.",
       "Kireä skuutti pienentää purjeen kokonaispinta-alaa, mikä suoraan vähentää peräsimen tarvitsemaa voimaa noustessa tuulta vasten.",
@@ -484,6 +484,19 @@ const QUESTIONS = [
     explanation: "Jos skuuttipiste on väärässä kohdassa, purjeen kulma tuuleen nähden vaihtelee korkeuden mukaan — esimerkiksi yläosa on kireämpi kuin alaosa tai päinvastoin. Tällöin etuliikki irtoaa eri korkeuksilla eri aikaan. Oikea skuuttipiste jakaa skuuttivoiman niin, että kulma pysyy samana koko korkeudella, jolloin koko etuliikki irtoaa yhtä aikaa.",
     source: "North Sails: \"The jib shall luff evenly, i.e. tell-tales must fly at the same time in top and bottom\"",
     evidence: "vahva"
+  },
+  {
+    q: "Miksi fokan yläosan virtauslanka irtoaa (luffaa) ennen alaosan lankaa nimenomaan silloin kun skuuttipiste on liian kaukana takana?",
+    options: [
+      "Takana oleva skuuttipiste loiventaa skuutin vetokulmaa ja siirtää voimaa enemmän takaliikkiin, jolloin yläosa kiristyy suhteessa alaosaan ja lähestyy sakkausrajaa ensimmäisenä.",
+      "Yläosan lanka on rakenteellisesti herkempi tuulen puuskille kuin alaosan lanka riippumatta skuuttipisteen sijainnista, koska se sijaitsee kauempana kannesta.",
+      "Takana oleva skuuttipiste kiristää fokan etuliikkiä suoraan mekaanisesti, mikä irrottaa yläosan langan ennen kuin mikään muu tekijä ehtii vaikuttaa.",
+      "Skuuttipisteen sijainti vaikuttaa ainoastaan purjeen kokonaispinta-alaan, joten lankojen irtoamisjärjestys määräytyy pelkästään sen hetkisestä tuulen nopeudesta."
+    ],
+    correct: 0,
+    explanation: "Kun skuuttipiste siirtyy taaksepäin, skuutin vetokulma muuttuu loivemmaksi ja vaakasuuntaisemmaksi, jolloin voima kohdistuu suhteessa enemmän takaliikkiin: purjeen yläosa kiristyy ja sen kiertymä (twist) vähenee suhteessa alaosaan. Kiristynyt yläosa toimii korkeammalla hyökkäyskulmalla lähempänä sakkausrajaa, joten kun venettä nostetaan tuuleen, sen virtaus irtoaa ensin — alaosa pysyy vielä kiinni, koska se on suhteessa löysempi. Sama logiikka toimii käänteisesti: jos alaosan lanka irtoaa ensin, skuuttipiste on liian edessä.",
+    source: "Yleinen fokan trimmidiagnostiikka (skuuttipisteen ja twistin yhteys) — ei suoraa lainausta ladatuista lähteistä, vahvistettu erikseen Cruising World- ja IT4Causes-lähteillä",
+    evidence: "perusteltu"
   }
 ];
 
